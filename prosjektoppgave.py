@@ -1,7 +1,7 @@
 import numpy as np              
 import matplotlib.pyplot as plt 
 from tqdm import tqdm
-
+#test
 def learning_rule(s1,s2,Ap,Am,taup,taum,t,i): 
     '''
     5.8 in article (typo in article, should be negative exponent for e)
@@ -101,7 +101,7 @@ def MHsampler():
     '''
     Monte Carlo sampling with particle filtering
     '''
-  
+    return 0  
 
 std = 0.001
 w0 = 1
