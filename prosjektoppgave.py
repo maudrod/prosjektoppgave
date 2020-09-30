@@ -132,3 +132,5 @@ for i in range(P):
     #plt.legend()
     plt.show()
 
+
+print(w0)
