@@ -103,6 +103,7 @@ def parameter_priors(shapes,rates):
 def proposal_step(shapes,theta):
     '''
     PROPOSAL FUNCTION Q - DRAW NEXT VALUE FOR PARAMETERS TO BE EVALUATED. GAMMA DISTRIBUTION: (5.24)
+    her er theta bare den forrige foreslåtte verdien, altså en 1*2 liste. 
     '''
     proposal = np.array([(np.random.gamma(shapes[i],theta[i]/shapes[i])) for i in range(len(shapes))])
     return proposal
@@ -110,6 +111,7 @@ def proposal_step(shapes,theta):
 def adjust_variance(theta, U):
     '''
     ADJUST VARIANCE ACCORDING TO 4.2.2.1 and 5.3.2.3
+    Her er theta hele matrisen, i*2, som tar har alle i samplesene for de 2 parameterne vi estimerer
     '''
     var_new = theta[-U:].var(0)*(2.4**2)
     alphas = np.array([((theta[-1][i]**2) * var_new[i]) for i in range(len(var_new))])
