@@ -74,7 +74,7 @@ def proposal_step(shapes,theta):
 
 def adjust_variance(theta, U):
     var_new = theta[-U:].var(0)*(2.4**2)
-    alphas = np.array([((theta[-1][i]**2) * var_new[i]) for i in range(len(var_new))])
+    alphas = np.array([((theta[-1][i]**2) / var_new[i]) for i in range(len(var_new))])
     proposal = np.array([(np.random.gamma(alphas[i],theta[-1][i]/alphas[i])) for i in range(len(var_new))])
     return alphas,proposal
     
@@ -82,8 +82,8 @@ def ratio(prob_prior,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_
     spike_prob_ratio = prob_next / prob_prior
     prior_ratio, proposal_ratio = 1,1
     for i in range(len(shapes)):
-        prior_ratio *= gamma.pdf(theta_next[i],a=shapes_prior[i],scale=rates_prior[i])/\
-        gamma.pdf(theta_prior[i],a=shapes_prior[i],scale=rates_prior[i])
+        prior_ratio *= gamma.pdf(theta_next[i],a=shapes_prior[i],scale=1/rates_prior[i])/\
+        gamma.pdf(theta_prior[i],a=shapes_prior[i],scale=1/rates_prior[i])
         proposal_ratio *= gamma.pdf(theta_prior[i],a=shapes[i],scale=theta_next[i]/shapes[i])/\
         gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
     return spike_prob_ratio * prior_ratio * proposal_ratio
