@@ -135,10 +135,16 @@ def scaled_spike_prob(fact_old,fact_new):
     '''
     METHOD 1 FOR CALCULATING P(Y_1:T GIVEN THETA) IN ALGORITHM 3. FOR BOTH THETA_NEW and OLD. (4.27)
     TAKING TWO LISTS WITH PRODUCTS FROM 4.27, SCALING BOTH LISTS WITH COMBINED MAX VALUE 
-    '''
-    fact_old /= np.max(np.stack((fact_old,fact_new)))
-    fact_new /= np.max(np.stack((fact_old,fact_new)))
-    return np.prod(fact_old),np.prod(fact_new)
+    '''   ´
+    values = np.unique(np.stack((fact_old,fact_new))) #alle unike verdier stigende rekkefølge
+    fact_old_scaled = fact_old/values[-1] #values[-1] = max
+    fact_new_scaled = fact_new/values[-1]
+    i = 2
+    while(np.prod(fact_old_scaled) == 0 or np.prod(fact_new_scaled) == 0):
+        fact_old_scaled /= values[-i]
+        fact_new_scaled /= values[-i]
+        i+=1
+    return np.prod(fact_old_scaled),np.prod(fact_new_scaled)
 
 def scaled2_spike_prob(old,new):
     '''
