@@ -11,3 +11,5 @@ x = 5
 
 print(x)
 
+with open('some_file.txt', 'w') as f:
+    f.write("x  %d" % x)
