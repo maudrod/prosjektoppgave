@@ -125,8 +125,8 @@ def ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_pr
     spike_prob_ratio = prob_next / prob_old #FACTOR 1 IN R 
     prior_ratio, proposal_ratio = 1,1 #FACTOR 2,3 IN R
     for i in range(len(shapes)):
-        prior_ratio *= gamma.pdf(theta_next[i],a=shapes_prior[i],scale=rates_prior[i])/\
-        gamma.pdf(theta_prior[i],a=shapes_prior[i],scale=rates_prior[i])
+        prior_ratio *= gamma.pdf(theta_next[i],a=shapes_prior[i],scale=1/rates_prior[i])/\
+        gamma.pdf(theta_prior[i],a=shapes_prior[i],scale=1/rates_prior[i])
         proposal_ratio *= gamma.pdf(theta_prior[i],a=shapes[i],scale=theta_next[i]/shapes[i])/\
         gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
     return spike_prob_ratio * prior_ratio * proposal_ratio #THESE ARE ALL THE RATIO FACTORS 
