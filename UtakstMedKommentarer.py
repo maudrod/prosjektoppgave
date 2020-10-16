@@ -96,7 +96,7 @@ def likelihood_step(s1,s2,w,b2):
 
 def parameter_priors(shapes,rates):
     '''
-    DRAW INITIAL VALUES FOR ALPHA AND TAU ACCORDING TO (5.22)
+    DRAW INITIAL VALUES FOR ALPHA AND TAU ACCORDING TO (5.22). np.random.gamma har definert beta fra artikkelen som 1/beta
     '''
     return np.array([(np.random.gamma(shapes[i],1/rates[i])) for i in range(len(shapes))])
 
@@ -140,7 +140,7 @@ def scaled_spike_prob(fact_old,fact_new):
 
 def scaled2_spike_prob(old,new):
     '''
-    METHOD 1 FOR CALCULATING P(Y_1:T GIVEN THETA) IN ALGORITHM 3. FOR BOTH THETA_NEW and OLD. (4.27)
+    METHOD 2 FOR CALCULATING P(Y_1:T GIVEN THETA) IN ALGORITHM 3. FOR BOTH THETA_NEW and OLD. (4.27)
     FINDING THE LOGARITHM AND THEN SCALE THE SUMS BY SUBTRACTING MAX OF OLD,NEW AND THEN EXPONENTIATE
     (jeg prøver bare begge metodene)
     '''
