@@ -114,7 +114,7 @@ def adjust_variance(theta, U):
     Her er theta hele matrisen, i*2, som tar har alle i samplesene for de 2 parameterne vi estimerer
     '''
     var_new = theta[-U:].var(0)*(2.4**2)
-    alphas = np.array([((theta[-1][i]**2) * var_new[i]) for i in range(len(var_new))])
+    alphas = np.array([((theta[-1][i]**2) / var_new[i]) for i in range(len(var_new))])
     proposal = np.array([(np.random.gamma(alphas[i],theta[-1][i]/alphas[i])) for i in range(len(var_new))])
     return alphas,proposal
     
