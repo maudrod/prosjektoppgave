@@ -10,7 +10,7 @@ def learning_rule(s1,s2,Ap,Am,taup,taum,t,i):
     t : numpy array with the measured time points
     Ap,Am,taup,taum : learning rule parameters 
     '''
-    return s2[i-1]*np.sum(s1[:i]*Ap*np.exp((t[:i]-max(t))/taup)) - s1[i-1]*np.sum(s2[:i]*Am*np.exp((t[:i]-max(t))/taum)) # *1000 for millisekunder
+    return s2[i-1]*np.sum(s1[:i]*Ap*np.exp((t[:i]-max(t))/taup)) - s1[i-1]*np.sum(s2[:i]*Am*np.exp((t[:i]-max(t))/taum))
 
 def logit(x):
     return np.log(x/(1-x))
@@ -48,9 +48,6 @@ def normalize(vp): #normalisere vekter
     return vp/sum(vp)
 
 def perplexity_func(vp_normalized,P):
-    if any(vp_normalized) == 0:
-        print('ERROR, WEIGHTS EQ. 0')
-        return 0
     h = -np.sum(vp_normalized*np.log(vp_normalized))
     return np.exp(h)/P
 
@@ -78,8 +75,8 @@ def adjust_variance(theta, U):
     proposal = np.array([(np.random.gamma(alphas[i],theta[-1][i]/alphas[i])) for i in range(len(var_new))])
     return alphas,proposal
     
-def ratio(prob_prior,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior):
-    spike_prob_ratio = prob_next / prob_prior
+def ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior):
+    spike_prob_ratio = prob_next / prob_old
     prior_ratio, proposal_ratio = 1,1
     for i in range(len(shapes)):
         prior_ratio *= gamma.pdf(theta_next[i],a=shapes_prior[i],scale=1/rates_prior[i])/\
@@ -88,6 +85,10 @@ def ratio(prob_prior,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_
         gamma.pdf(theta_next[i],a=shapes[i],scale=theta_prior[i]/shapes[i])
     return spike_prob_ratio * prior_ratio * proposal_ratio
 
+
+def scaled2_spike_prob(old,new):
+    return np.exp(old - np.min((old,new))),np.exp(new - np.min((old,new)))
+    
 def infer_b2_w0(s1,s2,tol):
     '''
     Fisher scoring algorithm 
@@ -107,7 +108,7 @@ def infer_b2_w0(s1,s2,tol):
         i += 1
     return beta
 
-def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,time):
+def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,time,W):
     '''
     Particle filtering, (doesnt quite work yet, smth with weights vp)
     Possible to speed it up? 
@@ -116,57 +117,57 @@ def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,time):
     timesteps = np.int(time/binsize)
     t = np.zeros(timesteps)
     wp = np.full((P,timesteps),w0)
+    for i in range(P):
+        wp[i] = np.copy(W)
+    print(np.shape(wp))
     vp = np.ones(P)
-    spike_posterior1 = 0
-    spike_posterior2 = 1
-    #perplexity_list = []
-    for i in tqdm(range(1,500)):
+    #posterior_factors = []
+    log_posterior = 0
+    #resample_times = []
+    for i in range(1,timesteps):
         v_normalized = normalize(vp)
         perplexity = perplexity_func(v_normalized,P)
-        #perplexity_list.append(perplexity)
         if perplexity < 0.66:
-            print('RESAMPLING:D')
             wp = resampling(v_normalized,wp,P)
             vp = np.full(P,1/P)
             v_normalized = normalize(vp)
+            #resample_times.append(i)
         t[i] = i*binsize
         for p in range(P):
             lr = learning_rule(s1,s2,theta[0],theta[0]*1.05,theta[1],theta[1],t,i) 
             wp[p][i] = wp[p][i-1] + lr + np.random.normal(0,std) 
             ls = likelihood_step(s1[i-1],s2[i],wp[p][i],b2)
             vp[p] = ls * v_normalized[p]
-        if any(vp == 0):
-            print('Error: wrong weights, = 0')
-            break 
-        #spike_posterior1 += np.log(np.sum(vp)/P) 
-        spike_posterior2 *= 1.5*np.sum(vp)#/P scale! *1.5P
-        #print(np.exp(spike_posterior1))
-        print(spike_posterior2)
-    #spike_posterior1 = np.exp(spike_posterior1)
-    return wp,spike_posterior1,t#,perplexity_list
-
+        log_posterior += np.log(np.sum(vp)/P)
+        #posterior_factors.append(np.sum(vp)/P)
+    return wp,t,log_posterior#,resample_times
             
-def MHsampler(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,time,U,it):
+def MHsampler(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,time,U,it,W):
     '''
     Monte Carlo sampling with particle filtering, algoritme 3
     '''
     theta_prior = parameter_priors(shapes_prior,rates_prior)
     theta = np.array([theta_prior])
     shapes = np.copy(shapes_prior)
-    _,prob_prior,_ = particle_filter(w0,b2est,theta_prior,s1,s2,std,P,binsize,time)
+    _,_,old_log_post = particle_filter(w0,b2est,theta_prior,s1,s2,std,P,binsize,time,W)
     i = 0
     for i in tqdm(range(1,it)):
         if (i % U == 0):
             shapes, theta_next = adjust_variance(theta,U)
         else:    
             theta_next = proposal_step(shapes,theta_prior)
-        _,prob_next,_ = particle_filter(w0,b2est,theta_next,s1,s2,std,P,binsize,time)
-        r = ratio(prob_prior,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior)
+        _,_,new_log_post = particle_filter(w0,b2est,theta_next,s1,s2,std,P,binsize,time,W)
+        print('theta_old: ',theta_prior, 'theta_new: ',theta_next)
+        prob_old,prob_next = scaled2_spike_prob(old_log_post,new_log_post)
+        print('prob_old: ',prob_old,'prob_new: ', prob_next)
+        r = ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior)
+        print('r: ',r)
         choice = np.int(np.random.choice([1,0], 1, p=[np.min([1,r]),1-np.min([1,r])]))
-        theta_choice = [theta_prior,theta_next][choice == 1]
+        theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
+        print('theta_choice: ',theta_choice)
         theta = np.vstack((theta, theta_choice))
-        theta_prior = np.copy(theta_next)
-        prob_prior = prob_next
+        theta_prior = np.copy(theta_choice)
+        old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
     return theta
         
 '''
@@ -174,18 +175,19 @@ PARAMETERS AND RUNNING OF ALGORITHM :
 '''        
 std = 0.001
 w0 = 1
-b1 = -2.25
-b2 = -2.25
+b1 = -2
+b2 = -2
 Ap = 0.005
 Am = Ap*1.05
-tau = 20e-3
+tau = 20.0e-3
 time = 120
-binsize = 1/200
-P = 100
+binsize = 1/200.0
+P = 10
 U = 100
-it = 2
+it = 1500
 shapes_prior = [1,1]
 rates_prior = [50,100]
+
 
 #theta_test = parameter_priors(shapes_prior,rates_prior)
 wp, spike_posterior, t = particle_filter(w0est,b2est,[Ap,tau],s1,s2,std,P,binsize,time)
