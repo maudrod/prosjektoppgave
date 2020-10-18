@@ -56,7 +56,7 @@ def resampling(vp_normalized,wp,P):
     indexes = np.linspace(0,P-1,P)
     resampling_indexes = np.random.choice(indexes,P,p=vp_normalized)
     for i in range(P):
-        wp_new[i] = wp[resampling_indexes.astype(int)[i]] 
+        wp_new[i] = np.copy(wp[resampling_indexes.astype(int)[i]])
     return wp_new
 
 def likelihood_step(s1,s2,w,b2): #p(s2 given s1,w,theta)
@@ -66,14 +66,13 @@ def parameter_priors(shapes,rates):
     return np.array([(np.random.gamma(shapes[i],1/rates[i])) for i in range(len(shapes))])
 
 def proposal_step(shapes,theta):
-    proposal = np.array([(np.random.gamma(shapes[i],theta[i]/shapes[i])) for i in range(len(shapes))])
-    return proposal
+    return np.array([(np.random.gamma(shapes[i],theta[i]/shapes[i])) for i in range(len(shapes))])
 
 def adjust_variance(theta, U):
     var_new = theta[-U:].var(0)*(2.4**2)
     alphas = np.array([((theta[-1][i]**2) / var_new[i]) for i in range(len(var_new))])
     proposal = np.array([(np.random.gamma(alphas[i],theta[-1][i]/alphas[i])) for i in range(len(var_new))])
-    return alphas,proposal
+    return alphas,proposal,var_new
     
 def ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior):
     spike_prob_ratio = prob_next / prob_old
@@ -108,7 +107,7 @@ def infer_b2_w0(s1,s2,tol):
         i += 1
     return beta
 
-def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,time,W):
+def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,time):
     '''
     Particle filtering, (doesnt quite work yet, smth with weights vp)
     Possible to speed it up? 
@@ -117,21 +116,15 @@ def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,time,W):
     timesteps = np.int(time/binsize)
     t = np.zeros(timesteps)
     wp = np.full((P,timesteps),w0)
-    for i in range(P):
-        wp[i] = np.copy(W)
-    print(np.shape(wp))
     vp = np.ones(P)
-    #posterior_factors = []
     log_posterior = 0
-    #resample_times = []
-    for i in range(1,timesteps):
+    for i in tqdm(range(1,timesteps)):
         v_normalized = normalize(vp)
         perplexity = perplexity_func(v_normalized,P)
         if perplexity < 0.66:
             wp = resampling(v_normalized,wp,P)
             vp = np.full(P,1/P)
             v_normalized = normalize(vp)
-            #resample_times.append(i)
         t[i] = i*binsize
         for p in range(P):
             lr = learning_rule(s1,s2,theta[0],theta[0]*1.05,theta[1],theta[1],t,i) 
@@ -139,32 +132,28 @@ def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,time,W):
             ls = likelihood_step(s1[i-1],s2[i],wp[p][i],b2)
             vp[p] = ls * v_normalized[p]
         log_posterior += np.log(np.sum(vp)/P)
-        #posterior_factors.append(np.sum(vp)/P)
-    return wp,t,log_posterior#,resample_times
+    v_normalized = normalize(vp)
+    return wp,t,log_posterior
             
-def MHsampler(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,time,U,it,W):
+def MHsampler(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,time,U,it):
     '''
     Monte Carlo sampling with particle filtering, algoritme 3
     '''
     theta_prior = parameter_priors(shapes_prior,rates_prior)
     theta = np.array([theta_prior])
     shapes = np.copy(shapes_prior)
-    _,_,old_log_post = particle_filter(w0,b2est,theta_prior,s1,s2,std,P,binsize,time,W)
+    _,_,old_log_post = particle_filter(w0,b2est,theta_prior,s1,s2,std,P,binsize,time)
     i = 0
     for i in tqdm(range(1,it)):
         if (i % U == 0):
             shapes, theta_next = adjust_variance(theta,U)
         else:    
             theta_next = proposal_step(shapes,theta_prior)
-        _,_,new_log_post = particle_filter(w0,b2est,theta_next,s1,s2,std,P,binsize,time,W)
-        print('theta_old: ',theta_prior, 'theta_new: ',theta_next)
+        _,_,new_log_post = particle_filter(w0,b2est,theta_next,s1,s2,std,P,binsize,time)
         prob_old,prob_next = scaled2_spike_prob(old_log_post,new_log_post)
-        print('prob_old: ',prob_old,'prob_new: ', prob_next)
         r = ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior)
-        print('r: ',r)
         choice = np.int(np.random.choice([1,0], 1, p=[np.min([1,r]),1-np.min([1,r])]))
         theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
-        print('theta_choice: ',theta_choice)
         theta = np.vstack((theta, theta_choice))
         theta_prior = np.copy(theta_choice)
         old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
@@ -182,32 +171,8 @@ Am = Ap*1.05
 tau = 20.0e-3
 time = 120
 binsize = 1/200.0
-P = 10
+P = 100
 U = 100
 it = 1500
 shapes_prior = [1,1]
 rates_prior = [50,100]
-
-
-#theta_test = parameter_priors(shapes_prior,rates_prior)
-wp, spike_posterior, t = particle_filter(w0est,b2est,[Ap,tau],s1,s2,std,P,binsize,time)
-#s1,s2,t,W = generative(Ap,Am,tau,tau,b1,b2,w0,std,time,binsize)
-#b1est = infer_b1(s1)
-#w0est = infer_b2_w0(s1[:2000],s2[:2000],1e-10)[1]
-#b2est = infer_b2_w0(s1,s2,1e-10)[0]
-#theta = MHsampler(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,time,U,it)
-
-
-'''
-plt.figure()
-for i in range(P):
-    plt.title('Weight trajectory')
-    plt.plot(t[:500],wp[i][:500])
-    plt.xlabel('Time')
-    plt.ylabel('Weight')
-    if i == 50:
-        plt.plot(t[:500],W[:500])
-    #plt.legend()
-    plt.show()
-    
-'''
