@@ -16,7 +16,7 @@ Here, clone into this github repo, by using
 
 Connecting to IDUN when you are at home and not at NTNU:
 
-1) `ssh markov`
+1) `ssh maudr@markov.math.ntnu.no`
 2) `ssh -l USERNAME idun-login1.hpc.ntnu.no`
 
 
