@@ -20,6 +20,14 @@ Connecting to IDUN when you are at home and not at NTNU:
 2) `ssh -l USERNAME idun-login1.hpc.ntnu.no`
 
 
+## Creating a virtual environment in IDUN
+
+
+
+## Creating a job in IDUN
+
+
+
 # Making changes to the repository
 
 Once you've made a change, use the command
