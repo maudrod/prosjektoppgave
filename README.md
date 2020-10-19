@@ -14,6 +14,12 @@ Here, clone into this github repo, by using
 
 `git clone https://github.com/maudrod/prosjektoppgave.git`
 
+Connecting to IDUN when you are at home and not at NTNU:
+
+1) `ssh markov`
+2) `ssh -l USERNAME idun-login1.hpc.ntnu.no`
+
+
 # Making changes to the repository
 
 Once you've made a change, use the command
