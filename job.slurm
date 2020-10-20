@@ -21,7 +21,10 @@ echo "We are using $SLURM_CPUS_ON_NODE cores"
 echo "We are using $SLURM_CPUS_ON_NODE cores per node"
 echo "Total of $SLURM_NTASKS cores"
 
-source ../datasci/bin/activate
+
+module load GCCcore/.9.3.0
 module load python/3.8.2
+
+source ../datasci/bin/activate
 
 python3 maud.py
