@@ -22,9 +22,13 @@ Connecting to IDUN when you are at home and not at NTNU:
 
 ## Creating a virtual environment in IDUN
 https://www.hpc.ntnu.no/idun/getting-started-on-idun/modules
+
 `$ type virtualenv`
+
 `$ virtualenv datasci`
+
 `$ source datasci/bin/activate`
+
 `(datasci)$ pip install scipy numpy scikit-learn pandas matplotlib`
 
 `source datasci/bin/activate`
