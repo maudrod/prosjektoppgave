@@ -74,3 +74,8 @@ Once you've made a change, use the command
 
 `python3 maud.py output > maudteksten.txt`
 
+# Move files 
+Write in terminal: `mv <filename> <map>
+
+
+
