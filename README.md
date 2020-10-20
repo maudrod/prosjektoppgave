@@ -53,13 +53,17 @@ Use the key i to edit this file. Copy paste the file as it is on the help page.
 Account = ie-imf
 Email: your ntnu email
 
-When done, Ctrl+C, then write `:wq!:` and hit enter.
+When done, Ctrl+C, then write `:wq!` and hit enter.
 
 `chmod u+x job.slurm`
 `sbatch job.slurm`
 
 
 # Making changes to the repository
+
+First make sure you're up to date with the current repository:
+
+`git pull`
 
 Once you've made a change, use the command
 
