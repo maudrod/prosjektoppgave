@@ -40,10 +40,7 @@ https://www.hpc.ntnu.no/idun/getting-started-on-idun/modules
    datasci
   $ source datasci/bin/activate
   (datasci)$ pip install scipy numpy scikit-learn pandas matplotlib
- 
-# To exit at virtual environment do deactivate
- 
-(datasci)$ deactivate`
+  (datasci)$ deactivate`
 
 
 ## Creating a job in IDUN
