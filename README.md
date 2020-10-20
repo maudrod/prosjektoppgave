@@ -38,7 +38,7 @@ Once you've made a change, use the command
 
 `git add FILEYOUMADECHANGESTO.py`
 
-`git commit`
+`git commit -m "la til det her"`
 
 `git push`
 
