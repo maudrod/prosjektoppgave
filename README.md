@@ -61,3 +61,9 @@ Once you've made a change, use the command
 
 `git push`
 
+
+
+# Saving outputs from file runs
+
+`python3 maud.py output > maudteksten.txt`
+
