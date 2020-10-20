@@ -44,10 +44,26 @@ https://www.hpc.ntnu.no/idun/getting-started-on-idun/modules
 
 
 ## Creating a job in IDUN
+https://www.hpc.ntnu.no/idun/getting-started-on-idun/running-jobs
 
+Create a job.slurm file:
+
+`vim job.slurm`
+Use the key i to edit this file. Copy paste the file as it is on the help page. 
+Account = ie-imf
+Email: your ntnu email
+
+When done, Ctrl+C, then write `:wq!` and hit enter.
+
+`chmod u+x job.slurm`
+`sbatch job.slurm`
 
 
 # Making changes to the repository
+
+First make sure you're up to date with the current repository:
+
+`git pull`
 
 Once you've made a change, use the command
 
@@ -60,4 +76,10 @@ Once you've made a change, use the command
 `git commit -m "la til det her"`
 
 `git push`
+
+
+
+# Saving outputs from file runs
+
+`python3 maud.py output > maudteksten.txt`
 
