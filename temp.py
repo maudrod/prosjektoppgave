@@ -8,6 +8,7 @@ ylist = np.random.randint(0,100,50)
 
 print(xlist)
 print(ylist)
+print("maud")
 
 np.save("x_test",xlist)
 np.save("y_test",ylist)
