@@ -1,6 +1,5 @@
 import numpy as np              
 import matplotlib.pyplot as plt 
-from tqdm import tqdm
 from scipy.stats import gamma
 from numba import njit
 @njit
@@ -30,7 +29,7 @@ def generative(Ap,Am,taup,taum,b1,b2,w0,std,seconds,binsize):
     t,W,s1,s2 = np.zeros(iterations),np.zeros(iterations),np.zeros(iterations),np.zeros(iterations)
     W[0] = w0 #Initial value for weights
     s1[0] = np.random.binomial(1,inverse_logit(b1)) #5.4 in article, generate spike/not for neuron 1
-    for i in tqdm(range(1,iterations)):
+    for i in range(1,iterations):
         lr = learning_rule(s1,s2,Ap,Am,taup,taum,t,i,binsize)
         W[i] = W[i-1] + lr + np.random.normal(0,std) #updating weights, as in 5.8 in article
         s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+b2)) #5.5 in article, spike/not neuron 2
@@ -44,7 +43,7 @@ def generative2(Ap,Am,taup,taum,b1,b2,w0,std,seconds,binsize):
     t,W,s1,s2 = np.zeros(iterations),np.zeros(iterations),np.zeros(iterations),np.zeros(iterations)
     W[0] = w0 #Initial value for weights
     s1[0] = np.random.binomial(1,inverse_logit(b1)) #5.4 in article, generate spike/not for neuron 1
-    for i in tqdm(range(1,iterations)):
+    for i in range(1,iterations):
         lr = learning_rule2(s1,s2,Ap,Am,taup,taum,t,i,binsize)
         W[i] = W[i-1] + lr + np.random.normal(0,std) #updating weights, as in 5.8 in article
         s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+b2)) #5.5 in article, spike/not neuron 2
@@ -169,8 +168,7 @@ def MHsampler(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it
     theta = np.array([theta_prior])
     shapes = np.copy(shapes_prior)
     _,_,old_log_post = particle_filter(w0,b2est,theta_prior,s1,s2,std,P,binsize,seconds)
-    i = 0
-    for i in tqdm(range(1,it)):
+    for i in range(1,it):
         if (i % U == 0):
             shapes, theta_next = adjust_variance(theta,U,it,shapes)
         else:    
