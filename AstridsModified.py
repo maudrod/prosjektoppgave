@@ -5,17 +5,12 @@ Created on Thu Oct 29 11:29:54 2020
 
 @author: maudrodsmoen
 """
-
-import sys, os
 import numpy.random
 import numpy as np
-import random
-import time
-from scipy import *
 import scipy.stats
-from scipy.stats import gamma 
-from scipy.stats import norm 
-import csv
+from scipy.stats import gamma
+from numba import njit
+@njit
 
 def learning_rule(t,S1_t, S2_t,S1,S2, A_p, A_m, tau_p,tau_m): #STDP learning rule
     l_p = np.sum(A_p*np.exp(-((t-S1_t)*1000)/(tau_p*t_per_second))) 
@@ -185,16 +180,16 @@ def estimate_b1(S1):
 
 def adaptive_alpha(H, A_p_list): 
     A_slice = A_p_list[len(A_p_list)-H:] 
-    m = mean(A_slice)
-    v = var(A_slice)*(2.4**2)
+    m = np.mean(A_slice)
+    v = np.var(A_slice)*(2.4**2)
     new_alpha = (m**2)/v 
     return (new_alpha)
 
 def adaptive_alpha_tau(H, tau_list): 
     tau_slice = tau_list[len(tau_list)-H:] 
     tau_slice_2 = [x/1000 for x in tau_slice] 
-    m = mean(tau_slice_2)
-    v = var(tau_slice_2)*(2.4**2) 
+    m = np.mean(tau_slice_2)
+    v = np.var(tau_slice_2)*(2.4**2) 
     new_alpha = (m**2)/v 
     return (new_alpha)
 
@@ -322,7 +317,12 @@ W_0 = estimate_W_and_b2(S1[:2000], S2[:2000], w_guess, b2, 40)[1]
 (A_list,tau_list,c) = particle_marginal_Metropolis_Hastings_both(A_p_start,tau_start, W_0, b1, b2, iterations,alpha, alpha_tau)
 
 
-
+np.save('A_list_Astrid',A_list)
+np.save('tau_list_Astrid',tau_list)
+np.save('c_Astrid',c)
+np.save('w0est_Astrid',W_0)
+np.save('b1est_Astrid',b1)
+np.save('b2est_Astrid',b2)
 
 
 
