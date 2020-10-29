@@ -31,7 +31,9 @@ https://www.hpc.ntnu.no/idun/getting-started-on-idun/modules
 
 `(datasci)$ pip install scipy numpy scikit-learn pandas matplotlib`
 
-`source datasci/bin/activate`
+If you are already in the prosjektoppgave folder:
+
+`source ../datasci/bin/activate`
 
 
 ## Creating a job in IDUN
