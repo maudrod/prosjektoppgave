@@ -1,6 +1,5 @@
 import numpy as np              
 import matplotlib.pyplot as plt 
-from tqdm import tqdm
 from scipy.stats import gamma
 import time
 from numba import njit
@@ -153,7 +152,7 @@ def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,i
     theta[0] = np.copy(theta_prior)
     shapes = np.copy(shapes_prior)
     old_log_post = particle_filter(w0,b2est,theta_prior,s1,s2,std,P,binsize,seconds,tau)[0]
-    for i in tqdm(range(1,it)):
+    for i in range(1,it):
         if (i % U == 0):
             theta_change = np.copy(theta[:i])
             shapes, theta_next = adjust_variance(theta_change,U,it,shapes)
