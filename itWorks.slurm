@@ -1,12 +1,12 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ
 #SBATCH --account=share-ie-imf
-#SBATCH --time=4-00:10:00
+#SBATCH --time=1-00:10:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=12000
-#SBATCH --job-name="a_tau_1500_1"
-#SBATCH --output=a_tau_output_1500_1.out
+#SBATCH --job-name="fixed_for_a"
+#SBATCH --output=fixed_for_a.out
 #SBATCH --mail-user=maudr@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
@@ -15,4 +15,4 @@ module load Python/3.8.2
 
 source ../datasci/bin/activate
 
-python3 Prosjektoppgave1idun.py
+python3 Fixed_for_A.py
