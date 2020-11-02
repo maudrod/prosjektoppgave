@@ -188,7 +188,7 @@ seconds = 120.0
 binsize = 1/200.0
 P = 500
 U = 100
-it = 100
+it = 1500
 
 shapes_prior = 4
 rates_prior = 50
