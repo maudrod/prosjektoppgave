@@ -15,4 +15,4 @@ module load Python/3.8.2
 
 source ../../datasci/bin/activate
 
-1msBinsize.py
+python3 1msBinsize.py
