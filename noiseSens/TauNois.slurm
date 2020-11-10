@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ
 #SBATCH --account=share-ie-imf
-#SBATCH --time=1-00:15:00
+#SBATCH --time=1-12:15:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=12000

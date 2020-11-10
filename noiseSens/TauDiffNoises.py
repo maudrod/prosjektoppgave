@@ -163,14 +163,14 @@ def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,i
         else:    
             theta_next = proposal_step(shapes,theta_prior)
         new_log_post = particle_filter(w0,b2est,Ap,s1,s2,std,P,binsize,seconds,theta_next)
-        print('old:', theta_prior)
-        print('new:', theta_next)
+        #print('old:', theta_prior)
+        #print('new:', theta_next)
         prob_old,prob_next = scaled2_spike_prob(old_log_post,new_log_post)
         r = ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior)
-        print('r:',r)
+        #print('r:',r)
         choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
         theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
-        print('choice:',theta_choice)
+        #print('choice:',theta_choice)
         theta[i] = theta_choice
         theta_prior = np.copy(theta_choice)
         old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
