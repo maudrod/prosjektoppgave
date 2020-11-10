@@ -7,7 +7,6 @@ Created on Tue Nov 10 17:00:35 2020
 """
 import numpy as np              
 import matplotlib.pyplot as plt 
-from tqdm import tqdm
 from scipy.stats import gamma
 from numba import njit
 @njit
@@ -34,7 +33,7 @@ def generative(Ap,Am,taup,taum,b1,b2,w0,std,seconds,binsize):
     t,W,s1,s2 = np.zeros(iterations),np.zeros(iterations),np.zeros(iterations),np.zeros(iterations)
     W[0] = w0 #Initial value for weights
     s1[0] = np.random.binomial(1,inverse_logit(b1)) #5.4 in article, generate spike/not for neuron 1
-    for i in tqdm(range(1,iterations)):
+    for i in range(1,iterations):
         s2[i] = np.random.binomial(1,inverse_logit(W[i-1]*s1[i-1]+b2)) #5.5 in article, spike/not neuron 2
         lr = learning_rule(s1,s2,Ap,Am,taup,taum,t,i,binsize)
         W[i] = W[i-1] + lr + np.random.normal(0,std) #updating weights, as in 5.8 in article
@@ -132,7 +131,7 @@ def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,seconds,tau):
     wp = np.full((P,timesteps),np.float(w0))
     vp = np.ones(P)
     log_posterior = 0
-    for i in tqdm(range(1,timesteps)):
+    for i in range(1,timesteps):
         v_normalized = normalize(vp)
         perplexity = perplexity_func(v_normalized,P)
         if perplexity < 0.66:
@@ -157,7 +156,7 @@ def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,i
     theta[0] = np.copy(theta_prior)
     shapes = np.copy(shapes_prior)
     old_log_post = particle_filter(w0,b2est,Ap,s1,s2,std,P,binsize,seconds,theta_prior)
-    for i in tqdm(range(1,it)):
+    for i in range(1,it):
         if (i % U == 0):
             theta_change = np.copy(theta[:i])
             shapes, theta_next = adjust_variance(theta_change,U,it,shapes)
