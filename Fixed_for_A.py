@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from scipy.stats import gamma
 import time
 from numba import njit
+import matplotlib as mpl
+import os
 @njit
 
 def learning_rule(s1,s2,Ap,Am,taup,taum,t,i,binsize): 
@@ -185,7 +187,7 @@ Am = Ap*1.05
 tau = 20.0e-3
 seconds = 120.0
 binsize = 1/200.0
-P = 500
+P = 1000 # particles
 U = 100
 it = 1500
 
@@ -201,20 +203,32 @@ w0est = infer_b2_w0(s1[:2000],s2[:2000],1e-10)[1]
 b2est = infer_b2_w0(s1,s2,1e-10)[0]
 Alist = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,fast_tau)
 
-np.save('s1_1',s1)
-np.save('s2_1',s2)
-np.save('t_1',t)
-np.save('w0est_1',w0est)
-np.save('b1est_1',b1est)
-np.save('b2est_1',b2est)
-np.save('Alist',Alist)
+
+'''
+PLOTTING AND SAVING
+'''
+
+strP = str(P)
+
+path = str(strP+'_particles')
+
+if not os.path.exists(path):
+    os.mkdir(path)
+
+np.save('./'+path+'/s1_'+strP,s1)
+np.save('./'+path+'/s2_'+strP,s2)
+np.save('./'+path+'/t_'+strP,t)
+np.save('./'+path+'/w0est_'+strP,w0est)
+np.save('./'+path+'/b1est_'+strP,b1est)
+np.save('./'+path+'/b2est_'+strP,b2est)
+np.save('./'+path+'/A_'+strP,Alist)
 
 plt.figure()
-plt.title('A')
+plt.title('A, '+strP+' particles')
 plt.xlabel('Iterations')
-plt.ylabel('Ap')
+plt.ylabel('A')
 plt.plot(np.linspace(1,it,it),Alist,'ro')
-plt.savefig('Aen')
+plt.savefig('./'+path+'/A_'+strP+'_particles')
 
 
 """
