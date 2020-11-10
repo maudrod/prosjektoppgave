@@ -199,7 +199,7 @@ rates_prior = 100
 
 #Tau1 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, Ap)
 
-'''
+
 taus2 = [0.005,0.01,0.015,0.017,0.019,0.02,0.021,0.023,0.025,0.03,0.035,0.04,0.045,0.05,0.06,0.07,0.08]
 loglikes = []
 wests = []
@@ -213,7 +213,7 @@ for i in range(100):
     for i in range(len(taus2)):
         particlelogliks2.append(particle_filter(w0est2,b2est2,Ap,s12,s22,std,P,binsize,seconds,taus2[i]))
     loglikes.append(particlelogliks2)
-'''
+
 b1 = -3.1
 b2 = -3.1
 binsize = 1/500.0
@@ -229,3 +229,9 @@ for i in range(100):
     for i in range(len(taus2)):
         particlelogliks3.append(particle_filter(w0est22,b2est22,Ap,s122,s222,std,P,binsize,seconds,taus2[i]))
     loglikes2.append(particlelogliks3)
+    
+np.save('w0estimates_5ms',wests)
+np.save('Loglikes_5ms',loglikes)
+np.save('Taus',taus2)
+np.save('w0estimates_2ms',wests2)
+np.save('loglikes_2ms',loglikes2)
