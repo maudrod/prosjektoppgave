@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=12000
-#SBATCH --job-name="1000p"
-#SBATCH --output=fixed_for_a_1000particles.out
+#SBATCH --job-name="500p"
+#SBATCH --output=fixed_for_a_500particles.out
 #SBATCH --mail-user=maudr@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
