@@ -7,7 +7,6 @@ Created on Tue Nov 10 20:31:11 2020
 """
 import numpy as np              
 import matplotlib.pyplot as plt 
-from tqdm import tqdm
 from scipy.stats import gamma
 from numba import njit
 @njit
@@ -34,7 +33,7 @@ def generative(Ap,Am,taup,taum,b1,b2,w0,std,seconds,binsize):
     t,W,s1,s2 = np.zeros(iterations),np.zeros(iterations),np.zeros(iterations),np.zeros(iterations)
     W[0] = w0 #Initial value for weights
     s1[0] = np.random.binomial(1,inverse_logit(b1)) #5.4 in article, generate spike/not for neuron 1
-    for i in tqdm(range(1,iterations)):
+    for i in range(1,iterations):
         s2[i] = np.random.binomial(1,inverse_logit(W[i-1]*s1[i-1]+b2)) #5.5 in article, spike/not neuron 2
         lr = learning_rule(s1,s2,Ap,Am,taup,taum,t,i,binsize)
         W[i] = W[i-1] + lr + np.random.normal(0,std) #updating weights, as in 5.8 in article
@@ -103,9 +102,6 @@ def adjust_variance(theta, U, par_ind,N,it,shapes):
     new_shapes = np.array([((mean[i]**2) / var_new[i]) for i in range(N)])
     for i in par_ind:
         theta_new[i] = np.random.gamma(new_shapes[i],theta[-1][i]/new_shapes[i])
-    print('mean:',mean)
-    print('var:',var_new)
-    print('theta_new:',theta_new)
     return new_shapes,theta_new
 
 def ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior,N):
@@ -178,7 +174,7 @@ def MHsampler(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U
     shapes = np.copy(shapes_prior)
     par_ind = np.linspace(0,N-1,N).astype(int)
     old_log_post = particle_filter(w0est,b2est,theta_prior,s1,s2,std,P,binsize,seconds)
-    for i in tqdm(range(1,it)):
+    for i in range(1,it):
         ex = [1,0][i % 2 == 0] #oddetall iterasjoner, eksluder Tau (index 1), partall: Ap (index 0)
         par_ind_temp = np.delete(par_ind,ex)
         if (i % U == 0):
@@ -188,11 +184,12 @@ def MHsampler(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U
         new_log_post = particle_filter(w0est,b2est,theta_next,s1,s2,std,P,binsize,seconds)
         prob_old,prob_next = scaled2_spike_prob(old_log_post,new_log_post)
         r = ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior,N)
-        print('old theta:', theta_prior)
-        print('new theta:', theta_next)
-        print('r:',r)
+        #print('old theta:', theta_prior)
+        #print('new theta:', theta_next)
+        #print('r:',r)
         choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
         theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
+        #print('choice:', theta_choice)
         theta = np.vstack((theta, theta_choice))
         theta_prior = np.copy(theta_choice)
         old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
@@ -259,10 +256,10 @@ std = 0.005
 
 Simest7 = MHsampler(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it,N)
 
-np.save('Alt0.0001noise',Simest1)
-np.save('Alt0.0005noise',Simest2)
-np.save('Alt0.001noise',Simest3)
-np.save('Alt0.002noise',Simest4)
-np.save('Altm0.003noise',Simest5)
-np.save('Alt0.004noise',Simest6)
-np.save('Alt0.005noise',Simest7)
+np.save('Tau0.02Ap0.005Alt0.0001noise',Simest1)
+np.save('Tau0.02Ap0.005Alt0.0005noise',Simest2)
+np.save('Tau0.02Ap0.005Alt0.001noise',Simest3)
+np.save('Tau0.02Ap0.005Alt0.002noise',Simest4)
+np.save('Tau0.02Ap0.005Altm0.003noise',Simest5)
+np.save('Tau0.02Ap0.005Alt0.004noise',Simest6)
+np.save('Tau0.02Ap0.005Alt0.005noise',Simest7)
