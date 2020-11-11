@@ -197,7 +197,7 @@ def MHsampler(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U
         
         
 '''
-PARAMETERS AND RUNNING OF ALGORITHM :
+PARAMETERS AND RUNNING OF ALGORITHM:
 '''        
 std = 0.0001
 w0 = 1.0
