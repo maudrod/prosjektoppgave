@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=12000
-#SBATCH --job-name="1msgens"
-#SBATCH --output=1msgen.out
+#SBATCH --job-name="1msgens2"
+#SBATCH --output=1msgen2.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
