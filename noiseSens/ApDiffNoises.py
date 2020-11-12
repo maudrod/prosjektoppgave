@@ -235,13 +235,13 @@ std = 0.005
 
 Apest7 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
 
-np.save('Ap0.0001noise',Apest1)
-np.save('Ap0.0005noise',Apest2)
-np.save('Ap0.001noise',Apest3)
-np.save('Ap0.002noise',Apest4)
-np.save('Ap0.003noise',Apest5)
-np.save('Ap0.004noise',Apest6)
-np.save('Ap0.005noise',Apest7)
+np.save('Ap0.0001noise2',Apest1)
+np.save('Ap0.0005noise2',Apest2)
+np.save('Ap0.001noise2',Apest3)
+np.save('Ap0.002noise2',Apest4)
+np.save('Ap0.003noise2',Apest5)
+np.save('Ap0.004noise2',Apest6)
+np.save('Ap0.005noise2',Apest7)
 
 
 
