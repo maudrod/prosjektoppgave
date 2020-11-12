@@ -2,7 +2,7 @@
 (Must be on NTNU network or use VPN!)
 https://www.hpc.ntnu.no/idun
 
-Log on:
+Log on :
 
 `ssh -l USERNAME idun-login1.hpc.ntnu.no`
 
