@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=12000
-#SBATCH --job-name="1prnormw0"
-#SBATCH --output=1prnormw0.out
+#SBATCH --job-name="10prnormw0"
+#SBATCH --output=10prnormw0.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
