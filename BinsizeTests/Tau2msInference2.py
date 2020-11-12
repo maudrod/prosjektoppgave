@@ -6,7 +6,7 @@ Created on Thu Nov 12 21:00:43 2020
 @author: emilam
 """
 import numpy as np              
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from scipy.stats import gamma
 from numba import njit
 @njit
@@ -203,13 +203,6 @@ while (w0est < 0.97 or w0est > 1.03):
     b2est = infer_b2_w0(s1, s2, 1e-10)[0]
     w0est = infer_b2_w0(s1[:5000], s2[:5000], 1e-10)[1]
 
-w0est2 = -np.inf
-while (w0est2 < 0.97 or w0est2 > 1.03):
-    s12,s22,t,W2 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
-    b1est2 = infer_b1(s12)
-    b2est2 = infer_b2_w0(s12, s22, 1e-10)[0]
-    w0est2 = infer_b2_w0(s12[:5000], s22[:5000], 1e-10)[1]
-
 w0est3 = -np.inf
 while (w0est3 < 0.97 or w0est3 > 1.03):
     s13,s23,t,W3 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
@@ -217,12 +210,6 @@ while (w0est3 < 0.97 or w0est3 > 1.03):
     b2est3 = infer_b2_w0(s13, s23, 1e-10)[0]
     w0est3 = infer_b2_w0(s13[:5000], s23[:5000], 1e-10)[1]
 
-w0est4 = -np.inf
-while (w0est4 < 0.97 or w0est4 > 1.03):
-    s14,s24,t,W4 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
-    b1est4 = infer_b1(s14)
-    b2est4 = infer_b2_w0(s14, s24, 1e-10)[0]
-    w0est4 = infer_b2_w0(s14[:5000], s24[:5000], 1e-10)[1]
 
 w0est5 = -np.inf
 while (w0est5 < 0.97 or w0est5 > 1.03):
@@ -230,13 +217,6 @@ while (w0est5 < 0.97 or w0est5 > 1.03):
     b1est5 = infer_b1(s15)
     b2est5 = infer_b2_w0(s15, s25, 1e-10)[0]
     w0est5 = infer_b2_w0(s15[:5000], s25[:5000], 1e-10)[1]
-
-w0est6 = -np.inf
-while (w0est6 < 0.97 or w0est6 > 1.03):
-    s16,s26,t,W6 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
-    b1est6 = infer_b1(s16)
-    b2est6 = infer_b2_w0(s16, s26, 1e-10)[0]
-    w0est6 = infer_b2_w0(s16[:5000], s26[:5000], 1e-10)[1]
 
 w0est7 = -np.inf
 while (w0est7 < 0.97 or w0est7 > 1.03):
@@ -247,19 +227,11 @@ while (w0est7 < 0.97 or w0est7 > 1.03):
 
 Tauest1 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, Ap)
 
-std = 0.0005
-
-
-Tauest2 = MHsampler2(w0est2, b2est2, shapes_prior, rates_prior, s12, s22, std, P, binsize, seconds, U, it, Ap)
 
 std = 0.001
 
 
 Tauest3 = MHsampler2(w0est3, b2est3, shapes_prior, rates_prior, s13, s23, std, P, binsize, seconds, U, it, Ap)
-
-std = 0.002
-
-Tauest4 = MHsampler2(w0est4, b2est4, shapes_prior, rates_prior, s14, s24, std, P, binsize, seconds, U, it, Ap)
 
 
 std = 0.003
@@ -267,19 +239,13 @@ std = 0.003
 Tauest5 = MHsampler2(w0est5, b2est5, shapes_prior, rates_prior, s15, s25, std, P, binsize, seconds, U, it, Ap)
 
 
-std = 0.004
-
-Tauest6 = MHsampler2(w0est6, b2est6, shapes_prior, rates_prior, s16, s26, std, P, binsize, seconds, U, it, Ap)
-
-
 std = 0.005
 
 Tauest7 = MHsampler2(w0est7, b2est7, shapes_prior, rates_prior, s17, s27, std, P, binsize, seconds, U, it, Ap)
 
 np.save('Tau0.0001noise2msB31',Tauest1)
-np.save('Tau0.0005noise2msB31',Tauest2)
 np.save('Tau0.001noise2msB31',Tauest3)
-np.save('Tau0.002noise2msB31',Tauest4)
 np.save('Tau0.003noise2msB31',Tauest5)
-np.save('Tau0.004noise2msB31',Tauest6)
 np.save('Tau0.005noise2msB31',Tauest7)
+
+
