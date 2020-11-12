@@ -209,7 +209,7 @@ for i in range(2000):
     b2ests.append(b2est)
     w0ests.append(w0est)
 
-np.save('Trajectories1ms_bm3.5',W5ms)
+#np.save('Trajectories1ms_bm3.5',W5ms)
 np.save('B1estimates1ms_bm3.5',b1ests)
 np.save('B2estimates1ms_bm3.5',b2ests)
 np.save('w0estimates1ms_bm3.5',w0ests)
