@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov 12 21:21:46 2020
+Created on Thu Nov 12 22:30:36 2020
 
 @author: emilam
 """
@@ -131,8 +131,8 @@ def particle_filter(w0,b2,Ap,s1,s2,std,P,binsize,seconds,tau):
     t = np.zeros(timesteps)
     #wp = np.full(P,np.float(w0))
     #vp = np.ones(P)
-    wp = np.random.normal(w0,w0/10,size = P)
-    vp = norm.pdf(wp,loc = w0, scale = w0/10)
+    wp = np.random.normal(w0,w0/100,size = P)
+    vp = norm.pdf(wp,loc = w0, scale = w0/100)
     log_posterior = 0
     for i in range(1,timesteps):
         v_normalized = normalize(vp)
@@ -223,8 +223,7 @@ for i in range(200):
     loglikesAp.append(particlelogliks)
 
 
-np.save('w0estimates_10prosent_norminit',wests)
-np.save('Loglikes_Tau_10pr_norminit',loglikesTau)
-np.save('Taus',taus2)
-np.save('Aps',Aps)
-np.save('loglikes_Ap_10pr_norminit',loglikesAp)
+np.save('w0estimates_1prosent_norminit',wests)
+np.save('Loglikes_Tau_1pr_norminit',loglikesTau)
+np.save('loglikes_Ap_1pr_norminit',loglikesAp)
+
