@@ -170,7 +170,7 @@ for i in range(7):
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
+
 plt.figure()
 plt.title('Ap inference - 0.005 noise')
 plt.xlabel('Iteration')
@@ -180,4 +180,120 @@ plt.plot(np.linspace(1,1500,1500),Ap7,'ko')
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
+'''
+'''
+Alternating analaysis
+'''
 
+Alt1True = np.load('Tau0.02Ap0.005Alt0.0001noise.npy')
+Alt2True = np.load('Tau0.02Ap0.005Alt0.0005noise.npy')
+Alt3True  = np.load('Tau0.02Ap0.005Alt0.001noise.npy')
+Alt4True = np.load('Tau0.02Ap0.005Alt0.002noise.npy')
+Alt5True = np.load('Tau0.02Ap0.005Altm0.003noise.npy')
+Alt6True = np.load('Tau0.02Ap0.005Alt0.004noise.npy')
+Alt7True = np.load('Tau0.02Ap0.005Alt0.005noise.npy')
+
+AltTaumeanT1 = np.mean(Alt1True[300:,1])
+AltTauvarT1 = np.var(Alt1True[300:,1])
+AltTaumeanT2 = np.mean(Alt2True[300:,1])
+AltTauvarT2 = np.var(Alt2True[300:,1])
+AltTaumeanT3 = np.mean(Alt3True[300:,1])
+AltTauvarT3 = np.var(Alt3True[300:,1])
+AltTaumeanT4 = np.mean(Alt4True[300:,1])
+AltTauvarT4 = np.var(Alt4True[300:,1])
+AltTaumeanT5 = np.mean(Alt5True[300:,1])
+AltTauvarT5 = np.var(Alt5True[300:,1])
+AltTaumeanT6 = np.mean(Alt6True[300:,1])
+AltTauvarT6 = np.var(Alt6True[300:,1])
+AltTaumeanT7 = np.mean(Alt7True[300:,1])
+AltTauvarT7 = np.var(Alt7True[300:,1])
+
+AltApmeanT1 = np.mean(Alt1True[300:,0])
+AltApvarT1 = np.var(Alt1True[300:,0])
+AltApmeanT2 = np.mean(Alt2True[300:,0])
+AltApvarT2 = np.var(Alt2True[300:,0])
+AltApmeanT3 = np.mean(Alt3True[300:,0])
+AltApvarT3 = np.var(Alt3True[300:,0])
+AltApmeanT4 = np.mean(Alt4True[300:,0])
+AltApvarT4 = np.var(Alt4True[300:,0])
+AltApmeanT5 = np.mean(Alt5True[300:,0])
+AltApvarT5 = np.var(Alt5True[300:,0])
+AltApmeanT6 = np.mean(Alt6True[300:,0])
+AltApvarT6 = np.var(Alt6True[300:,0])
+AltApmeanT7 = np.mean(Alt7True[300:,0])
+AltApvarT7 = np.var(Alt7True[300:,0])
+
+TaumeansAltT = [AltTaumeanT1,AltTaumeanT2,AltTaumeanT3,AltTaumeanT4,AltTaumeanT5,AltTaumeanT6,AltTaumeanT7]
+TaustdsAltT = [np.sqrt(AltTauvarT1),np.sqrt(AltTauvarT2),np.sqrt(AltTauvarT3),np.sqrt(AltTauvarT4),np.sqrt(AltTauvarT5),np.sqrt(AltTauvarT6),np.sqrt(AltTauvarT7)]
+
+ApmeansAltT = [AltApmeanT1,AltApmeanT2,AltApmeanT3,AltApmeanT4,AltApmeanT5,AltApmeanT6,AltApmeanT7]
+ApstdsAltT= [np.sqrt(AltApvarT1),np.sqrt(AltApvarT2),np.sqrt(AltApvarT3),np.sqrt(AltApvarT4),np.sqrt(AltApvarT5),np.sqrt(AltApvarT6),np.sqrt(AltApvarT7)]
+
+#plt.figure()
+#plt.plot(Alt7True[300:,1],Alt7True[300:,0],'ko')
+#plt.show()
+
+Alt1Big = np.load('Tau0.01Ap0.0075Alt0.0001noise.npy')
+Alt2Big = np.load('Tau0.01Ap0.0075Alt0.0005noise.npy')
+Alt3Big  = np.load('Tau0.01Ap0.0075Alt0.001noise.npy')
+Alt4Big = np.load('Tau0.01Ap0.0075Alt0.002noise.npy')
+Alt5Big = np.load('Tau0.01Ap0.0075Altm0.003noise.npy')
+Alt6Big = np.load('Tau0.01Ap0.0075Alt0.004noise.npy')
+Alt7Big = np.load('Tau0.01Ap0.0075Alt0.005noise.npy')
+
+AltTaumeanB1 = np.mean(Alt1Big[300:,1])
+AltTauvarB1 = np.var(Alt1Big[300:,1])
+AltTaumeanB2 = np.mean(Alt2Big[300:,1])
+AltTauvarB2 = np.var(Alt2Big[300:,1])
+AltTaumeanB3 = np.mean(Alt3Big[300:,1])
+AltTauvarB3 = np.var(Alt3Big[300:,1])
+AltTaumeanB4 = np.mean(Alt4Big[300:,1])
+AltTauvarB4 = np.var(Alt4Big[300:,1])
+AltTaumeanB5 = np.mean(Alt5Big[300:,1])
+AltTauvarB5 = np.var(Alt5Big[300:,1])
+AltTaumeanB6 = np.mean(Alt6Big[300:,1])
+AltTauvarB6 = np.var(Alt6Big[300:,1])
+AltTaumeanB7 = np.mean(Alt7Big[300:,1])
+AltTauvarB7 = np.var(Alt7Big[300:,1])
+
+AltApmeanB1 = np.mean(Alt1Big[300:,0])
+AltApvarB1 = np.var(Alt1Big[300:,0])
+AltApmeanB2 = np.mean(Alt2Big[300:,0])
+AltApvarB2 = np.var(Alt2Big[300:,0])
+AltApmeanB3 = np.mean(Alt3Big[300:,0])
+AltApvarB3 = np.var(Alt3Big[300:,0])
+AltApmeanB4 = np.mean(Alt4Big[300:,0])
+AltApvarB4 = np.var(Alt4Big[300:,0])
+AltApmeanB5 = np.mean(Alt5Big[300:,0])
+AltApvarB5 = np.var(Alt5Big[300:,0])
+AltApmeanB6 = np.mean(Alt6Big[300:,0])
+AltApvarB6 = np.var(Alt6Big[300:,0])
+AltApmeanB7 = np.mean(Alt7Big[300:,0])
+AltApvarB7 = np.var(Alt7Big[300:,0])
+
+TaumeansAltB = [AltTaumeanB1,AltTaumeanB2,AltTaumeanB3,AltTaumeanB4,AltTaumeanB5,AltTaumeanB6,AltTaumeanB7]
+TaustdsAltB = [np.sqrt(AltTauvarB1),np.sqrt(AltTauvarB2),np.sqrt(AltTauvarB3),np.sqrt(AltTauvarB4),np.sqrt(AltTauvarB5),np.sqrt(AltTauvarB6),np.sqrt(AltTauvarB7)]
+
+ApmeansAltB = [AltApmeanB1,AltApmeanB2,AltApmeanB3,AltApmeanB4,AltApmeanB5,AltApmeanB6,AltApmeanB7]
+ApstdsAltB = [np.sqrt(AltApvarB1),np.sqrt(AltApvarB2),np.sqrt(AltApvarB3),np.sqrt(AltApvarB4),np.sqrt(AltApvarB5),np.sqrt(AltApvarB6),np.sqrt(AltApvarB7)]
+
+plt.figure()
+plt.plot(Alt7Big[:,1],Alt7Big[:,0],'ko')
+plt.show()
+
+x = [1,2,3,4,5,6,7]
+ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
+'''
+plt.figure()
+plt.title('Sensitivity of noise - Alternating proposals - A')
+plt.xlabel('Noise')
+plt.ylabel('Ap estimation')
+plt.ylim([0.002,0.008])
+plt.xlim([0,8])
+plt.xticks(x,labels = ticksss)
+for i in range(7):
+    plt.errorbar(x[i], ApmeansAltB[i], yerr = ApstdsAltB[i],marker = 'o')
+plt.axhline(0.0075,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+'''
