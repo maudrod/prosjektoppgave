@@ -1,12 +1,12 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ
 #SBATCH --account=share-ie-imf
-#SBATCH --time=1-12:15:00
+#SBATCH --time=2-20:15:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=12000
-#SBATCH --job-name="Alt3SimNoise"
-#SBATCH --output=Alt3SimNoiA.out
+#SBATCH --job-name="TauInf2ms2"
+#SBATCH --output=TauInf2ms2.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
@@ -15,4 +15,4 @@ module load Python/3.8.2
 
 source ../../datasci/bin/activate
 
-python3 AltSimDiffNoises3.py
+python3 Tau2msInference2.py

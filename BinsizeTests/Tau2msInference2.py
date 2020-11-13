@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Nov 10 20:30:31 2020
+Created on Thu Nov 12 21:00:43 2020
 
 @author: emilam
 """
 import numpy as np              
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from scipy.stats import gamma
 from numba import njit
 @njit
@@ -147,22 +147,22 @@ def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,seconds,tau):
     v_normalized = normalize(vp)
     return log_posterior
 
-def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,tau):
+def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,Ap):
     '''
     Monte Carlo sampling with particle filtering, algoritme 3
     '''
-    theta_prior = 0.001
+    theta_prior = 0.004
     theta = np.zeros(it)
     theta[0] = np.copy(theta_prior)
     shapes = np.copy(shapes_prior)
-    old_log_post = particle_filter(w0,b2est,theta_prior,s1,s2,std,P,binsize,seconds,tau)
+    old_log_post = particle_filter(w0,b2est,Ap,s1,s2,std,P,binsize,seconds,theta_prior)
     for i in range(1,it):
         if (i % U == 0):
             theta_change = np.copy(theta[:i])
             shapes, theta_next = adjust_variance(theta_change,U,it,shapes)
         else:    
             theta_next = proposal_step(shapes,theta_prior)
-        new_log_post = particle_filter(w0,b2est,theta_next,s1,s2,std,P,binsize,seconds,tau)
+        new_log_post = particle_filter(w0,b2est,Ap,s1,s2,std,P,binsize,seconds,theta_next)
         #print('old:', theta_prior)
         #print('new:', theta_next)
         prob_old,prob_next = scaled2_spike_prob(old_log_post,new_log_post)
@@ -182,18 +182,18 @@ PARAMETERS AND RUNNING OF ALGORITHM :
 '''        
 std = 0.0001
 w0 = 1.0
-b1 = -2
-b2 = -2
+b1 = -3.1
+b2 = -3.1
 Ap = 0.005
 Am = Ap*1.05
 tau = 20.0e-3
 seconds = 120.0
-binsize = 1/200.0
+binsize = 1/500.0
 P = 1000
 U = 100
 it = 1500
-shapes_prior = 4
-rates_prior = 50
+shapes_prior = 5
+rates_prior = 100
 
 
 w0est = -np.inf
@@ -201,48 +201,51 @@ while (w0est < 0.97 or w0est > 1.03):
     s1,s2,t,W = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
     b1est = infer_b1(s1)
     b2est = infer_b2_w0(s1, s2, 1e-10)[0]
-    w0est = infer_b2_w0(s1[:2000], s2[:2000], 1e-10)[1]
+    w0est = infer_b2_w0(s1[:5000], s2[:5000], 1e-10)[1]
+
+w0est3 = -np.inf
+while (w0est3 < 0.97 or w0est3 > 1.03):
+    s13,s23,t,W3 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
+    b1est3 = infer_b1(s13)
+    b2est3 = infer_b2_w0(s13, s23, 1e-10)[0]
+    w0est3 = infer_b2_w0(s13[:5000], s23[:5000], 1e-10)[1]
 
 
-Apest1 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
+w0est5 = -np.inf
+while (w0est5 < 0.97 or w0est5 > 1.03):
+    s15,s25,t,W5 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
+    b1est5 = infer_b1(s15)
+    b2est5 = infer_b2_w0(s15, s25, 1e-10)[0]
+    w0est5 = infer_b2_w0(s15[:5000], s25[:5000], 1e-10)[1]
 
-std = 0.0005
+w0est7 = -np.inf
+while (w0est7 < 0.97 or w0est7 > 1.03):
+    s17,s27,t,W7 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
+    b1est7 = infer_b1(s17)
+    b2est7 = infer_b2_w0(s17, s27, 1e-10)[0]
+    w0est7 = infer_b2_w0(s17[:5000], s27[:5000], 1e-10)[1]
 
+Tauest1 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, Ap)
 
-Apest2 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
 
 std = 0.001
 
 
-Apest3 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
-
-std = 0.002
-
-Apest4 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
+Tauest3 = MHsampler2(w0est3, b2est3, shapes_prior, rates_prior, s13, s23, std, P, binsize, seconds, U, it, Ap)
 
 
 std = 0.003
 
-Apest5 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
-
-
-std = 0.004
-
-Apest6 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
+Tauest5 = MHsampler2(w0est5, b2est5, shapes_prior, rates_prior, s15, s25, std, P, binsize, seconds, U, it, Ap)
 
 
 std = 0.005
 
-Apest7 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
+Tauest7 = MHsampler2(w0est7, b2est7, shapes_prior, rates_prior, s17, s27, std, P, binsize, seconds, U, it, Ap)
 
-np.save('Ap0.0001noise2',Apest1)
-np.save('Ap0.0005noise2',Apest2)
-np.save('Ap0.001noise2',Apest3)
-np.save('Ap0.002noise2',Apest4)
-np.save('Ap0.003noise2',Apest5)
-np.save('Ap0.004noise2',Apest6)
-np.save('Ap0.005noise2',Apest7)
-
-
+np.save('Tau0.0001noise2msB31',Tauest1)
+np.save('Tau0.001noise2msB31',Tauest3)
+np.save('Tau0.003noise2msB31',Tauest5)
+np.save('Tau0.005noise2msB31',Tauest7)
 
 

@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=12000
-#SBATCH --job-name="AltSimNoiseAff"
-#SBATCH --output=AltSimNoisA.out
+#SBATCH --job-name="AltSimNoise"
+#SBATCH --output=AltSimNois.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
 #SBATCH --mail-type=ALL
 

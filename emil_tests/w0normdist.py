@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Nov 10 20:30:31 2020
+Created on Thu Nov 12 21:21:46 2020
 
 @author: emilam
 """
 import numpy as np              
 import matplotlib.pyplot as plt 
 from scipy.stats import gamma
+from scipy.stats import norm
 from numba import njit
 @njit
 
@@ -120,7 +121,7 @@ def infer_b2_w0(s1,s2,tol):
         i += 1
     return beta
 
-def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,seconds,tau):
+def particle_filter(w0,b2,Ap,s1,s2,std,P,binsize,seconds,tau):
     '''
     Particle filtering, (doesnt quite work yet, smth with weights vp)
     Possible to speed it up? 
@@ -128,8 +129,10 @@ def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,seconds,tau):
     '''
     timesteps = np.int(seconds/binsize)
     t = np.zeros(timesteps)
-    wp = np.full((P,timesteps),np.float(w0))
-    vp = np.ones(P)
+    #wp = np.full(P,np.float(w0))
+    #vp = np.ones(P)
+    wp = np.random.normal(w0,w0/10,size = P)
+    vp = norm.pdf(wp,loc = w0, scale = w0/10)
     log_posterior = 0
     for i in range(1,timesteps):
         v_normalized = normalize(vp)
@@ -138,31 +141,31 @@ def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,seconds,tau):
             wp = resampling(v_normalized,wp,P)
             vp = np.full(P,1/P)
             v_normalized = normalize(vp)
-        lr = learning_rule(s1,s2,theta,theta*1.05,tau,tau,t,i,binsize)
-        ls = likelihood_step(s1[i-1],s2[i],wp[:,i-1],b2)  
+        lr = learning_rule(s1,s2,Ap,Ap*1.05,tau,tau,t,i,binsize)
+        ls = likelihood_step(s1[i-1],s2[i],wp[:],b2)  
         vp = ls*v_normalized
-        wp[:,i] = wp[:,i-1] + lr + np.random.normal(0,std,size = P)
+        wp = wp + lr + np.random.normal(0,std,size = P)
         log_posterior += np.log(np.sum(vp)/P)
         t[i] = i*binsize
     v_normalized = normalize(vp)
     return log_posterior
 
-def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,tau):
+def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,Ap):
     '''
     Monte Carlo sampling with particle filtering, algoritme 3
     '''
-    theta_prior = 0.001
+    theta_prior = 0.005
     theta = np.zeros(it)
     theta[0] = np.copy(theta_prior)
     shapes = np.copy(shapes_prior)
-    old_log_post = particle_filter(w0,b2est,theta_prior,s1,s2,std,P,binsize,seconds,tau)
+    old_log_post = particle_filter(w0,b2est,Ap,s1,s2,std,P,binsize,seconds,theta_prior)
     for i in range(1,it):
         if (i % U == 0):
             theta_change = np.copy(theta[:i])
             shapes, theta_next = adjust_variance(theta_change,U,it,shapes)
         else:    
             theta_next = proposal_step(shapes,theta_prior)
-        new_log_post = particle_filter(w0,b2est,theta_next,s1,s2,std,P,binsize,seconds,tau)
+        new_log_post = particle_filter(w0,b2est,Ap,s1,s2,std,P,binsize,seconds,theta_next)
         #print('old:', theta_prior)
         #print('new:', theta_next)
         prob_old,prob_next = scaled2_spike_prob(old_log_post,new_log_post)
@@ -192,57 +195,36 @@ binsize = 1/200.0
 P = 1000
 U = 100
 it = 1500
-shapes_prior = 4
-rates_prior = 50
+shapes_prior = 5
+rates_prior = 100
 
 
-w0est = -np.inf
-while (w0est < 0.97 or w0est > 1.03):
-    s1,s2,t,W = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
-    b1est = infer_b1(s1)
-    b2est = infer_b2_w0(s1, s2, 1e-10)[0]
-    w0est = infer_b2_w0(s1[:2000], s2[:2000], 1e-10)[1]
+#Tau1 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, Ap)
 
 
-Apest1 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
-
-std = 0.0005
-
-
-Apest2 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
-
-std = 0.001
-
-
-Apest3 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
-
-std = 0.002
-
-Apest4 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
-
-
-std = 0.003
-
-Apest5 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
-
-
-std = 0.004
-
-Apest6 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
+taus2 = [0.005,0.01,0.015,0.017,0.019,0.02,0.021,0.023,0.025,0.03,0.035,0.04,0.045,0.05,0.06,0.07,0.08]
+Aps = [0.001,0.002,0.0025,0.003,0.004,0.0045,0.0048,0.0049,0.005,0.0051,0.0052,0.0055,0.006,0.0065,0.007,0.0075,0.008]
+loglikesTau = []
+wests = []
+loglikesAp = []
+for i in range(200):
+    s12,s22,t2,W2 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
+    b1est2 = infer_b1(s12)
+    b2est2 = infer_b2_w0(s12, s22, 1e-10)[0]
+    w0est2 = infer_b2_w0(s12[:2000], s22[:2000], 1e-10)[1]
+    wests.append(w0est2)
+    particlelogliks2 = []
+    particlelogliks = []
+    for j in range(len(taus2)):
+        particlelogliks2.append(particle_filter(w0est2,b2est2,Ap,s12,s22,std,P,binsize,seconds,taus2[j]))
+    for k in range(len(Aps)):
+        particlelogliks.append(particle_filter(w0est2,b2est2,Aps[k],s12,s22,std,P,binsize,seconds,tau))
+    loglikesTau.append(particlelogliks2)
+    loglikesAp.append(particlelogliks)
 
 
-std = 0.005
-
-Apest7 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, tau)
-
-np.save('Ap0.0001noise2',Apest1)
-np.save('Ap0.0005noise2',Apest2)
-np.save('Ap0.001noise2',Apest3)
-np.save('Ap0.002noise2',Apest4)
-np.save('Ap0.003noise2',Apest5)
-np.save('Ap0.004noise2',Apest6)
-np.save('Ap0.005noise2',Apest7)
-
-
-
-
+np.save('w0estimates_10prosent_norminit',wests)
+np.save('Loglikes_Tau_10pr_norminit',loglikesTau)
+np.save('Taus',taus2)
+np.save('Aps',Aps)
+np.save('loglikes_Ap_10pr_norminit',loglikesAp)
