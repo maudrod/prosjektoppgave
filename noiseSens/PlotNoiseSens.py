@@ -7,19 +7,20 @@ Created on Thu Nov 12 16:00:30 2020
 """
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 '''
 Ap analysis
 '''
-'''
+
 Ap1 = np.load('Ap0.0001noise.npy')
-Ap2 = np.load('Ap0.0005noise.npy')
-Ap3 = np.load('Ap0.001noise.npy')
-Ap4 = np.load('Ap0.002noise.npy')
-Ap5 = np.load('Ap0.003noise.npy')
-Ap6 = np.load('Ap0.004noise.npy')
-Ap7 = np.load('Ap0.005noise.npy')
+Ap2 = np.load('Ap0.0005noise2.npy')
+Ap3 = np.load('Ap0.001noise2.npy')
+Ap4 = np.load('Ap0.002noise2.npy')
+Ap5 = np.load('Ap0.003noise2.npy')
+Ap6 = np.load('Ap0.004noise2.npy')
+Ap7 = np.load('Ap0.005noise2.npy')
 
 mean1 = np.mean(Ap1[300:])
 var1 = np.var(Ap1[300:])
@@ -36,10 +37,13 @@ var6 = np.var(Ap6[300:])
 mean7 = np.mean(Ap7[300:])
 var7 = np.var(Ap7[300:])
 
-means = [mean1,mean2,mean3,mean4,mean5,mean6,mean7]
-stds = [np.sqrt(var1),np.sqrt(var2),np.sqrt(var3),np.sqrt(var4),np.sqrt(var5),np.sqrt(var6),np.sqrt(var7)]
 x = [1,2,3,4,5,6,7]
 ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
+
+'''
+means = [mean1,mean2,mean3,mean4,mean5,mean6,mean7]
+stds = [np.sqrt(var1),np.sqrt(var2),np.sqrt(var3),np.sqrt(var4),np.sqrt(var5),np.sqrt(var6),np.sqrt(var7)]
+
 plt.figure()
 plt.title('Sensitivity of noise')
 plt.xlabel('Noise')
@@ -54,9 +58,19 @@ plt.legend()
 plt.show()
 '''
 '''
+
+plt.figure()
+plt.xlim([0.002,0.008])
+sns.displot(Ap7[300:], kde=True)
+plt.axvline(0.005,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.title('Posterior distribution Ap - 0.005 noise')
+plt.show()
+'''
+'''
 Tau analysis
 '''
-'''
+
 Tau1 = np.load('Tau0.0001noise.npy')
 Tau2 = np.load('Tau0.0005noise.npy')
 Tau3 = np.load('Tau0.001noise.npy')
@@ -82,6 +96,7 @@ Tauvar7 = np.var(Tau7[300:])
 
 Taumeans = [Taumean1,Taumean2,Taumean3,Taumean4,Taumean5,Taumean6,Taumean7]
 Taustds = [np.sqrt(Tauvar1),np.sqrt(Tauvar2),np.sqrt(Tauvar3),np.sqrt(Tauvar4),np.sqrt(Tauvar5),np.sqrt(Tauvar6),np.sqrt(Tauvar7)]
+'''
 plt.figure()
 plt.title('Sensitivity of noise')
 plt.xlabel('Noise')
@@ -95,6 +110,14 @@ plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
+
+plt.figure()
+sns.displot(Tau7[300:], kde=True)
+plt.axvline(0.02,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.title('Posterior distribution Tau - 0.005 noise')
+plt.show()
+
 '''
 Simultaneous
 '''
@@ -184,7 +207,7 @@ plt.show()
 '''
 Alternating analaysis
 '''
-
+'''
 Alt1True = np.load('Tau0.02Ap0.005Alt0.0001noise.npy')
 Alt2True = np.load('Tau0.02Ap0.005Alt0.0005noise.npy')
 Alt3True  = np.load('Tau0.02Ap0.005Alt0.001noise.npy')
@@ -283,6 +306,7 @@ plt.show()
 
 x = [1,2,3,4,5,6,7]
 ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
+'''
 '''
 plt.figure()
 plt.title('Sensitivity of noise - Alternating proposals - A')
