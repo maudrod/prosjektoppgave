@@ -1,0 +1,2 @@
+AltSimDiffNoises2.py:120: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
