@@ -138,6 +138,7 @@ plt.axvline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
+'''
 plt.figure()
 plt.title('Tau loglikelihood - Good estimate w0 - 1ms')
 plt.xlabel('Tau')
@@ -155,9 +156,9 @@ plt.plot(Taus,np.asarray(Tau1mshighs).mean(0),label='Mean 100 datasets')
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
+'''
 plt.figure()
-plt.title('Tau loglikelihood - Low estimate w0 - 2ms')
+plt.title('Tau loglikelihood - Low estimate w0 - 1ms')
 plt.xlabel('Tau')
 plt.ylabel('Loglikelihood')
 plt.plot(Taus,np.asarray(Tau1mslows).mean(0),label='Mean 100 datasets')
