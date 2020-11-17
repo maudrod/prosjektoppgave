@@ -111,7 +111,7 @@ plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
-
+'''
 plt.figure()
 sns.displot(Tau1[300:], kde=True)
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
@@ -128,7 +128,7 @@ plt.plot(np.linspace(1,1500,1500),Tau1,'ko')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
+'''
 '''
 Simultaneous
 '''
@@ -218,7 +218,7 @@ plt.show()
 '''
 Alternating analaysis
 '''
-'''
+
 Alt1True = np.load('Tau0.02Ap0.005Alt0.0001noise.npy')
 Alt2True = np.load('Tau0.02Ap0.005Alt0.0005noise.npy')
 Alt3True  = np.load('Tau0.02Ap0.005Alt0.001noise.npy')
@@ -310,25 +310,29 @@ TaustdsAltB = [np.sqrt(AltTauvarB1),np.sqrt(AltTauvarB2),np.sqrt(AltTauvarB3),np
 
 ApmeansAltB = [AltApmeanB1,AltApmeanB2,AltApmeanB3,AltApmeanB4,AltApmeanB5,AltApmeanB6,AltApmeanB7]
 ApstdsAltB = [np.sqrt(AltApvarB1),np.sqrt(AltApvarB2),np.sqrt(AltApvarB3),np.sqrt(AltApvarB4),np.sqrt(AltApvarB5),np.sqrt(AltApvarB6),np.sqrt(AltApvarB7)]
-
+'''
 plt.figure()
 plt.plot(Alt7Big[:,1],Alt7Big[:,0],'ko')
 plt.show()
-
+'''
 x = [1,2,3,4,5,6,7]
 ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
-'''
-'''
+
+
 plt.figure()
-plt.title('Sensitivity of noise - Alternating proposals - A')
-plt.xlabel('Noise')
-plt.ylabel('Ap estimation')
-plt.ylim([0.002,0.008])
-plt.xlim([0,8])
-plt.xticks(x,labels = ticksss)
-for i in range(7):
-    plt.errorbar(x[i], ApmeansAltB[i], yerr = ApstdsAltB[i],marker = 'o')
-plt.axhline(0.0075,color='r',linestyle='--',label='True Value')
+sns.displot(Alt1True[300:,1], kde=True)
+plt.axvline(0.02,color='r',linestyle='--',label='True Value')
+#plt.xlim([0.003,0.007])
+plt.legend()
+plt.title('Posterior distribution Tau - 0.0001 noise')
+plt.show()
+
+plt.figure()
+plt.title('Tau inference - 0.0001 noise')
+plt.xlabel('Iteration')
+plt.ylabel('Tau')
+#plt.ylim([0,0.01])
+plt.plot(np.linspace(1,1500,1500),Alt1True[:,1],'ko')
+plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
