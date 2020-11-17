@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=12000
-#SBATCH --job-name="ApNoise9to13"
-#SBATCH --output=Ap9to13.out
+#SBATCH --job-name="ApNoise9to12"
+#SBATCH --output=Ap9to12.out
 #SBATCH --mail-user=emilamy@stud.ntnu.no
 #SBATCH --mail-type=ALL
 
@@ -15,4 +15,4 @@ module load Python/3.8.2
 
 source ../../datasci/bin/activate
 
-python3 Dataset9til13.py
+python3 Dataset9til12.py
