@@ -240,7 +240,7 @@ std = 0.005
 
 Tauest7 = MHsampler2(w0est7, b2est7, shapes_prior, rates_prior, s17, s27, std, P, binsize, seconds, U, it, Ap)
 
-np.save('Tau0.0001noise2msB275',Tauest1)
-np.save('Tau0.001noise2msB275',Tauest3)
-np.save('Tau0.003noise2msB275',Tauest5)
-np.save('Tau0.005noise2msB275',Tauest7)
+np.save('Tau0.0001noise1msB35',Tauest1)
+np.save('Tau0.001noise2msB35',Tauest3)
+np.save('Tau0.003noise2msB35',Tauest5)
+np.save('Tau0.005noise2msB35',Tauest7)
