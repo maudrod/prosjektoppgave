@@ -1,0 +1,2 @@
+Dataset1til4.py:102: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
