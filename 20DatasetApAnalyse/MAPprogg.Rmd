@@ -1,0 +1,107 @@
+---
+title: "PlotMAP"
+author: "Emil Myhre"
+date: "22 11 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+KJØRDA 
+
+```{r}
+library(RcppCNPy)
+Data1 <-npyLoad("Data1.npy")
+Data2 <-npyLoad("Data2.npy")
+Data3 <-npyLoad("Data3.npy")
+Data4 <-npyLoad("Data4.npy")
+Data5 <-npyLoad("Data5.npy")
+Data6 <-npyLoad("Data6.npy")
+Data7 <-npyLoad("Data7.npy")
+Data8 <-npyLoad("Data8.npy")
+Data9 <-npyLoad("Data9.npy")
+Data10 <-npyLoad("Data10.npy")
+Data11 <-npyLoad("Data11.npy")
+Data12 <-npyLoad("Data12.npy")
+Data13 <-npyLoad("Data13.npy")
+Data14 <-npyLoad("Data14.npy")
+Data15 <-npyLoad("Data15.npy")
+Data16 <-npyLoad("Data16.npy")
+Data17 <-npyLoad("Data17.npy")
+Data18 <-npyLoad("Data18.npy")
+Data19 <-npyLoad("Data19.npy")
+Data20 <-npyLoad("Data20.npy")
+```
+
+
+```{r dist}
+library(EnvStats)
+Data1_1 <- Data1[1,c(300:1500)]
+Data1_2 <- Data1[2,c(300:1500)]
+Data1_3 <- Data1[3,c(300:1500)]
+Data1_4 <- Data1[4,c(300:1500)]
+Data1_5 <- Data1[5,c(300:1500)]
+
+#y <- lapply(x, FUN = dens, Data1_1)
+#MAP = (which.max(unlist(y)) - 1)*stepsize
+stepsize <- 0.00001
+dens <- function(x,Data=Data1_1){
+  return (demp(x,Data))
+}
+x <- seq(from = 0, to = 0.01, by = stepsize)
+
+Maps1 = c() #0.0001 noise
+Maps2 = c() #0.0005 noise
+Maps3 = c() # 0.001 noise
+Maps4 = c() #0.003 noise
+Maps5 = c() #0.005 noise
+
+calculateMaps <- function(Data,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5){
+  for (i in 1:5){ 
+  if (i==1) {
+    Maps1 <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Data[i,c(300:1500)]))) - 1)*stepsize)
+  }
+  else if (i==2){
+    Maps2 <<- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, Data[i,c(300:1500)]))) - 1)*stepsize)
+  }
+  else if(i == 3){
+    Maps3 <<- append(Maps3,(which.max(unlist(lapply(x, FUN = dens, Data[i,c(300:1500)]))) - 1)*stepsize)
+  }
+  else if (i==4){
+    Maps4 <<- append(Maps4,(which.max(unlist(lapply(x, FUN = dens, Data[i,c(300:1500)]))) - 1)*stepsize)
+  }
+  else {
+    Maps5 <<- append(Maps5,(which.max(unlist(lapply(x, FUN = dens, Data[i,c(300:1500)]))) - 1)*stepsize)
+  }
+  }
+  #return (list(Maps1,Maps2,Maps3,Maps4,Maps5))
+}
+calculateMaps(Data1,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data2,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data3,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data4,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data5,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data6,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data7,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data8,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data9,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data10,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data11,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data12,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data13,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data14,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data15,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data16,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data17,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data18,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data19,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+calculateMaps(Data20,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5)
+
+npySave("Maps0.0001",Maps1)
+npySave("Maps0.0005",Maps2)
+npySave("Maps0.001",Maps3)
+npySave("Maps0.003",Maps4)
+npySave("Maps0.005",Maps5)
+```
