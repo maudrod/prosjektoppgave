@@ -92,4 +92,6 @@ Emil:
 `scp -r emilamy@idun-login1.hpc.ntnu.no:/lustre1/work/emilamy/prosjektoppgave/MAPPEN_DU_VIL_LASTE_NED STEDET_PÅ_PCEN_DER_DETTE_LAGRES`
 
 
+# DATASET: 
+https://www.sciencedirect.com/science/article/pii/S0896627317309029
 
