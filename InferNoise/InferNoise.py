@@ -193,8 +193,8 @@ binsize = 1/200.0
 P = 1000
 U = 100
 it = 1500
-shapes_prior = 5
-rates_prior = 350
+shapes_prior = 0.025
+rates_prior = 5
 '''
 
 estimate_noise = False 
@@ -245,7 +245,7 @@ np.save('NoiseInf0.001',StdEst)
 np.save('NoiseInf0.003',StdEst3)
 '''
 
-x = np.linspace(0,0.01,100000)
+x = np.linspace(0,1,100000)
 prior = gamma.pdf(x,a=shapes_prior,scale=1/rates_prior)
 
 StdEst = np.load('NoiseInf0.001.npy')
@@ -254,17 +254,17 @@ StdEst3 = np.load('NoiseInf0.003.npy')
 
 
 plt.figure()
-sns.displot(StdEst[300:], kde=True,bins=100)
+#sns.displot(StdEst[300:], kde=True,bins=100)
 #plt.xlim([0.004,0.007])
-plt.axvline(0.001,color='r',linestyle='--',label='True Value: 0.001')
+#plt.axvline(0.001,color='r',linestyle='--',label='True Value: 0.001')
 plt.plot(x,prior,'m--',label='Prior')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title('Posterior distribution $\sigma^2$')
+plt.title('Prior distribution $\sigma$')
 #plt.axvline(np.mean(Theta1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
-
+'''
 plt.figure()
 sns.displot(StdEst2[300:], kde=True,bins=100)
 #plt.xlim([0.004,0.007])
@@ -288,4 +288,4 @@ plt.title('Posterior distribution $\sigma^2$')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
-
+'''
