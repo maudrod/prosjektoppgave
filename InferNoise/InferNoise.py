@@ -8,7 +8,7 @@ Created on Tue Nov 24 17:43:36 2020
 import numpy as np              
 import matplotlib.pyplot as plt 
 from scipy.stats import gamma
-import seaborn as sns
+#import seaborn as sns
 from numba import njit
 @njit
 
@@ -195,13 +195,13 @@ U = 100
 it = 1500
 shapes_prior = 0.025
 rates_prior = 5
-'''
 
+'''
 estimate_noise = False 
 N = [2,3][estimate_noise == True] #number of parameters to estimate
 shapes_prior = [np.array([4,5]),np.array([4,5,5])][estimate_noise == True]
 rates_prior = [np.array([50,100]),np.array([50,100,350])][estimate_noise == True]
-
+'''
 
 w0est = -np.inf
 while (w0est < 0.97 or w0est > 1.03):
@@ -211,11 +211,12 @@ while (w0est < 0.97 or w0est > 1.03):
     w0est = infer_b2_w0(s1[:2000], s2[:2000], 1e-10)[1]
 
 
+'''
 stds = [0.00001,0.00003,0.00005,0.00007,0.00009,0.0001,0.00011,0.00013,0.00015,0.0002,0.00025,0.0003,0.0005,0.001,0.0015,0.002,0.003,0.005]
 loglikes = []
 for stdd in tqdm(stds):
     loglikes.append(particle_filter(w0est, b2est, Ap, tau, s1, s2, stdd, P, binsize, seconds))
-
+'''
 
 StdEst = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,P,binsize,seconds,U,it,Ap,tau)
 
@@ -240,17 +241,17 @@ while (w0est3 < 0.97 or w0est3 > 1.03):
 
 StdEst3 = MHsampler2(w0est3,b2est3,shapes_prior,rates_prior,s13,s23,P,binsize,seconds,U,it,Ap,tau)
 
-np.save('NoiseInf0.0005',StdEst2)
-np.save('NoiseInf0.001',StdEst)
-np.save('NoiseInf0.003',StdEst3)
-'''
+np.save('NoiseInf0.0005Cl1',StdEst2)
+np.save('NoiseInf0.001Cl1',StdEst)
+np.save('NoiseInf0.003Cl1',StdEst3)
 
+'''
 x = np.linspace(0,1,100000)
 prior = gamma.pdf(x,a=shapes_prior,scale=1/rates_prior)
 
-StdEst = np.load('NoiseInf0.001.npy')
-StdEst2= np.load('NoiseInf0.0005.npy')
-StdEst3 = np.load('NoiseInf0.003.npy')
+StdEst = np.load('NoiseInf0.001Cl1.npy')
+StdEst2= np.load('NoiseInf0.0005Cl1.npy')
+StdEst3 = np.load('NoiseInf0.003Cl1.npy')
 
 
 plt.figure()
@@ -264,6 +265,7 @@ plt.title('Prior distribution $\sigma$')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
+'''
 '''
 plt.figure()
 sns.displot(StdEst2[300:], kde=True,bins=100)
