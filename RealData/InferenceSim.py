@@ -210,5 +210,5 @@ w0est = infer_b2_w0(spk_pre[:10000], spk_post[:10000], 1e-10)[1]
 Simest1 = MHsampler(w0est, b2est, shapes_prior, rates_prior, spk_pre, spk_post, std, P, binsize, timesteps, U, it)
 
 np.save('ApEstData19113Ind11v6Sim',Simest1[300:,0])
-np.save('ApEstData19113Ind11v6Sim',Simest1[300:,1])
+np.save('TauEstData19113Ind11v6Sim',Simest1[300:,1])
 
