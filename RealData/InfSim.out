@@ -1,0 +1,14 @@
+InferenceSim.py:149: RuntimeWarning: divide by zero encountered in log
+  log_posterior += np.log(np.sum(vp)/P)
+InferenceSim.py:58: RuntimeWarning: invalid value encountered in true_divide
+  return vp/np.sum(vp)
+InferenceSim.py:28: RuntimeWarning: overflow encountered in exp
+  return np.exp(x)/(1+np.exp(x))
+InferenceSim.py:28: RuntimeWarning: invalid value encountered in true_divide
+  return np.exp(x)/(1+np.exp(x))
+InferenceSim.py:105: RuntimeWarning: overflow encountered in exp
+  return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+InferenceSim.py:61: RuntimeWarning: divide by zero encountered in log
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
+InferenceSim.py:61: RuntimeWarning: invalid value encountered in multiply
+  h = -np.sum(vp_normalized*np.log(vp_normalized))
