@@ -49,34 +49,34 @@ data19115 = loadmat('camkii13_190115.spikes.cellinfo.mat')
 #st2 = np.concatenate(data19110['spikes']['times'][11]).round(1)
 #st3 = np.concatenate(data19110['spikes']['times'][23]).round(1)
 #st4 = np.concatenate(data19110['spikes']['times'][24]).round(1)
+'''
+st1 = np.concatenate(data19113['spikes']['times'][2]).round(1)
+st2 = np.concatenate(data19113['spikes']['times'][3]).round(1)
+st3 = np.concatenate(data19113['spikes']['times'][5]).round(1)
+st4 = np.concatenate(data19113['spikes']['times'][21]).round(1)
+st5 = np.concatenate(data19113['spikes']['times'][24]).round(1)
+st6 = np.concatenate(data19113['spikes']['times'][11]).round(1)
 
-#st1 = np.concatenate(data19113['spikes']['times'][2]).round(1)
-#st2 = np.concatenate(data19113['spikes']['times'][3]).round(1)
-#st3 = np.concatenate(data19113['spikes']['times'][5]).round(1)
-#st4 = np.concatenate(data19113['spikes']['times'][21]).round(1)
-#st5 = np.concatenate(data19113['spikes']['times'][24]).round(1)
-#st6 = np.concatenate(data19113['spikes']['times'][11]).round(1)
+#st1 = np.concatenate(data18231['spikes']['times'][2]).round(1)
+#st2 = np.concatenate(data18231['spikes']['times'][4]).round(1)
+#st3 = np.concatenate(data18231['spikes']['times'][7]).round(1)
+#st4 = np.concatenate(data18231['spikes']['times'][12]).round(1)
+#st5 = np.concatenate(data18231['spikes']['times'][15]).round(1)
+#st6 = np.concatenate(data18231['spikes']['times'][16]).round(1)
+#st7 = np.concatenate(data18231['spikes']['times'][17]).round(1)
+#st8 = np.concatenate(data18231['spikes']['times'][20]).round(1)
+#st9 = np.concatenate(data18231['spikes']['times'][21]).round(1)
+#st10 = np.concatenate(data18231['spikes']['times'][30]).round(1)
+#st11 = np.concatenate(data18231['spikes']['times'][32]).round(1)
 
-st1 = np.concatenate(data18231['spikes']['times'][2]).round(1)
-st2 = np.concatenate(data18231['spikes']['times'][4]).round(1)
-st3 = np.concatenate(data18231['spikes']['times'][7]).round(1)
-st4 = np.concatenate(data18231['spikes']['times'][12]).round(1)
-st5 = np.concatenate(data18231['spikes']['times'][15]).round(1)
-st6 = np.concatenate(data18231['spikes']['times'][16]).round(1)
-st7 = np.concatenate(data18231['spikes']['times'][17]).round(1)
-st8 = np.concatenate(data18231['spikes']['times'][20]).round(1)
-st9 = np.concatenate(data18231['spikes']['times'][21]).round(1)
-st10 = np.concatenate(data18231['spikes']['times'][30]).round(1)
-st11 = np.concatenate(data18231['spikes']['times'][32]).round(1)
-
-end = int(max(st1[-1],st2[-1],st3[-1],st4[-1],st5[-1],st6[-1],st7[-1],st8[-1],st9[-1],st10[-1],st11[-1]))
+end = int(max(st1[-1],st2[-1],st3[-1],st4[-1],st5[-1],st6[-1]))#,st7[-1],st8[-1],st9[-1],st10[-1],st11[-1]))
 
 binsize = 0.1 #milliseconds
 bins = int((end)/binsize)
 timesteps = np.linspace(0,end-binsize,bins)
 
 s1,s2,s3,s4,s5,s6 = np.zeros(bins),np.zeros(bins),np.zeros(bins),np.zeros(bins),np.zeros(bins),np.zeros(bins)
-s7,s8,s9,s10,s11 = np.zeros(bins),np.zeros(bins),np.zeros(bins),np.zeros(bins),np.zeros(bins)
+#s7,s8,s9,s10,s11 = np.zeros(bins),np.zeros(bins),np.zeros(bins),np.zeros(bins),np.zeros(bins)
 for i in range(bins):
     if timesteps[i] in st1:
         s1[i] = 1
@@ -90,22 +90,25 @@ for i in range(bins):
         s5[i] = 1
     if timesteps[i] in st6:
         s6[i] = 1
-    if timesteps[i] in st7:
-        s7[i] = 1
-    if timesteps[i] in st8:
-        s8[i] = 1
-    if timesteps[i] in st9:
-        s9[i] = 1
-    if timesteps[i] in st10:
-        s10[i] = 1
-    if timesteps[i] in st11:
-        s11[i] = 1
+    #if timesteps[i] in st7:
+    #    s7[i] = 1
+    #if timesteps[i] in st8:
+    #    s8[i] = 1
+    #if timesteps[i] in st9:
+    #    s9[i] = 1
+    #if timesteps[i] in st10:
+    #    s10[i] = 1
+    #if timesteps[i] in st11:
+    #    s11[i] = 1
 
-
-
+'''
+x = [-100,-75,-50,-25,0,25,50,75,100]
+ms = ['-10','-7.5','-5','-2.5','0','2.5','5','7.5','10']
 plt.figure()
-plt.title('s10 vs s11')
-plt.xcorr(s10,s11,usevlines=True, maxlags=50, normed=True, lw=2)
+plt.title('Cross-correlation of pre- and postsynaptic neuron')
+plt.xcorr(s6[40000:90000],s2[40000:90000],usevlines=True, maxlags=100, normed=True, lw=2)
+plt.xticks(x,labels = ms)
+plt.xlabel('Timelag (ms)')
 plt.show()
 
 

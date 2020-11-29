@@ -20,8 +20,8 @@ def learning_rule(s1,s2,Ap,Am,taup,taum,t,i,binsize):
     t : numpy array with the measured time points
     Ap,Am,taup,taum : learning rule parameters 
     '''
-    l = i - np.int(np.ceil(10*taup / binsize))
-    return s2[i-1]*np.sum(s1[max([l,0]):i]*Ap*np.exp((t[max([l,0]):i]-max(t))/taup)) - s1[i-1]*np.sum(s2[max([l,0]):i]*Am*np.exp((t[max([l,0]):i]-max(t))/taum))
+    #l = i - np.int(np.ceil(10*taup / binsize))
+    return s2[i-1]*np.sum(s1[:i]*Ap*np.exp((t[:i]-max(t))/taup)) - s1[i-1]*np.sum(s2[:i]*Am*np.exp((t[:i]-max(t))/taum))
 
 def logit(x):
     return np.log(x/(1-x))
@@ -218,42 +218,91 @@ N = [2,3][estimate_noise == True] #number of parameters to estimate
 shapes_prior = [np.array([4,5]),np.array([4,5,5])][estimate_noise == True]
 rates_prior = [np.array([50,100]),np.array([50,100,350])][estimate_noise == True]
 
-#a = np.load('PreNeur_PostNeur_Timesteps(ms).npy')
-#spk_pre = a[0][40000:90000]
-#spk_post = a[1][40000:90000]
-#timesteps = len(spk_pre)
-#binsize = (a[2][1] - a[2][0]) / 1000
+a = np.load('PreNeur_PostNeur_Timesteps(ms).npy')
+spk_pre = a[0][40000:90000]
+spk_post = a[1][40000:90000]
+timesteps = len(spk_pre)
+binsize = (a[2][1] - a[2][0]) / 1000
 
-#b1est = infer_b1(spk_pre)
-#b2est = infer_b2_w0(spk_pre, spk_post, 1e-10)[0]
-#w0est = infer_b2_w0(spk_pre[:10000], spk_post[:10000], 1e-10)[1]
+b1est = infer_b1(spk_pre)
+b2est = infer_b2_w0(spk_pre, spk_post, 1e-10)[0]
+w0est = infer_b2_w0(spk_pre[:10000], spk_post[:10000], 1e-10)[1]
 
 #Simest1 = MHsampler(w0est, b2est, shapes_prior, rates_prior, spk_pre, spk_post, std, P, binsize, timesteps, U, it,N)
+
+ApSim = np.load('ApEstData19113Ind11v6Sim.npy')
+TauSim = np.load('TauEstData19113Ind11v6Sim.npy')
+ApAlt = np.load('ApEstData19113Ind11v6.npy')
+TauAlt = np.load('TauEstData19113Ind11v6.npy')
+
+medApSim = np.median(ApSim[500:])
+medTauSim = np.median(TauSim)
+medApAlt = np.median(ApAlt[500:])
+medTauAlt = np.median(TauAlt)
+
+mapApSim = np.load('MapApData19113Ind11v6Sim.npy')
+mapTauSim = np.load('MapTauData19113Ind11v6Sim.npy')
+mapApAlt = np.load('MapApData19113Ind11v6.npy')
+mapTauAlt = np.load('MapTauData19113Ind11v6.npy')
+
+meanApSim = np.mean(ApSim[500:])
+meanTauSim = np.mean(TauSim)
+meanApAlt = np.mean(ApAlt[500:])
+meanTauAlt = np.mean(TauAlt)
+'''
+Traj = np.zeros(timesteps)
+Traj[0] = w0est
+t = np.zeros(timesteps)
+for i in range(1,timesteps):
+    Traj[i] = Traj[i-1] + learning_rule(spk_pre,spk_post,mapApSim,mapApSim*1.05,mapTauSim,mapTauSim,t,i,binsize) + np.random.normal(0,std)
+    t[i] = binsize*i
+'''
+
+plot_gen_weight(t, Traj)
+
 '''
 plt.figure()
-plt.xlim([0,0.01])
-plt.plot(Simest1[300:,1],Simest1[300:,0],'ko')
-plt.show()
-'''
-plt.figure()
-sns.displot(Simest1[300:,0], kde=True,bins=10000)
-plt.xlim([0.00,0.005])
-#plt.axvline(0.005,color='r',linestyle='--',label='True Value')
+#sns.displot(ApSim,bins=10000)
+#plt.xlim([0.00,0.001])
+plt.plot(np.linspace(301,1500,1200),TauSim,'ko')
+plt.ylabel('Tau')
+plt.xlabel('Iteration')
+#plt.axvline(mapApSim,color='r',linestyle='--',label='Map')
+#plt.axvline(medApSim,color='g',linestyle='--',label='Median')
+#plt.axvline(meanApSim,color='m',linestyle='--',label='Mean')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title('Posterior distribution $A_+$ - 0.0001 noise')
+plt.title('Tau sampling - Simultaneous Proposals - 0.0001 noise')
 #plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
+'''
+'''
+plt.figure()
+sns.displot(ApAlt[500:],kde = True,bins=100)
+#plt.plot(np.linspace(1,1200,1200),ApAlt,'ko')
+plt.xlim([0.00,0.001])
+plt.axvline(mapApAlt,color='r',linestyle='--',label='Map')
+plt.axvline(medApAlt,color='g',linestyle='--',label='Median')
+plt.axvline(meanApAlt,color='m',linestyle='--',label='Mean')
+#plt.plot(X,DensAp1.pdf(X),label='Scipy')
+plt.title('MH Sampling $A_+$ - Alternating Proposals - 0.0001 noise')
+#plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
+#plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
+plt.legend()
 
 plt.figure()
-sns.displot(Simest1[300:,1], kde=True,bins=10000)
-plt.xlim([0.00,0.007])
-#plt.axvline(0.005,color='r',linestyle='--',label='True Value')
+sns.displot(ApSim[500:],kde = True,bins=100)
+#plt.plot(np.linspace(1,1200,1200),ApAlt,'ko')
+plt.xlim([0.00,0.0006])
+plt.axvline(mapApSim,color='r',linestyle='--',label='Map')
+plt.axvline(medApSim,color='g',linestyle='--',label='Median')
+plt.axvline(meanApSim,color='m',linestyle='--',label='Mean')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title('Posterior distribution tau - 0.0001 noise')
+plt.title('MH Sampling $A_+$ - Simultaneous Proposals - 0.0001 noise')
 #plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
+'''
 

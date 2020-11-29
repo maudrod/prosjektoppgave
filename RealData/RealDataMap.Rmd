@@ -1,0 +1,30 @@
+---
+title: "RealDataMAP"
+author: "Emil Myhre"
+date: "29 11 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r MAP}
+library(RcppCNPy)
+library(EnvStats)
+Data = npyLoad("Data1.npy")
+stepsize <- 0.00001
+dens <- function(x,Data=Data1_1){
+  return (demp(x,Data))
+}
+x <- seq(from = 0, to = 0.01, by = stepsize)
+
+Map = (which.max(unlist(lapply(x, FUN = dens, Data[i,c(300:1500)]))) - 1)*stepsize
+
+calculateMaps <- function(Data,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5){
+  for (i in 1:5){ 
+  if (i==1) {
+    Maps1 <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Data[i,c(300:1500)]))) - 1)*stepsize)
+  }
+```
+
