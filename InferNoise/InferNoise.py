@@ -8,6 +8,7 @@ Created on Tue Nov 24 17:43:36 2020
 import numpy as np              
 import matplotlib.pyplot as plt 
 from scipy.stats import gamma
+#from scipy import stats
 #import seaborn as sns
 from numba import njit
 @njit
@@ -193,8 +194,8 @@ binsize = 1/200.0
 P = 1000
 U = 100
 it = 1500
-shapes_prior = 0.025
-rates_prior = 5
+shapes_prior = 5
+rates_prior = 800
 
 '''
 estimate_noise = False 
@@ -241,40 +242,68 @@ while (w0est3 < 0.97 or w0est3 > 1.03):
 
 StdEst3 = MHsampler2(w0est3,b2est3,shapes_prior,rates_prior,s13,s23,P,binsize,seconds,U,it,Ap,tau)
 
-np.save('NoiseInf0.0005Cl1',StdEst2)
-np.save('NoiseInf0.001Cl1',StdEst)
-np.save('NoiseInf0.003Cl1',StdEst3)
+np.save('NoiseInf0.0005_beta800',StdEst2)
+np.save('NoiseInf0.001_beta800',StdEst)
+np.save('NoiseInf0.003_beta800',StdEst3)
+
 
 '''
-x = np.linspace(0,1,100000)
+x = np.linspace(0,0.05,100000)
 prior = gamma.pdf(x,a=shapes_prior,scale=1/rates_prior)
+prior2 = gamma.pdf(x,a=5,scale=1/800)
 
-StdEst = np.load('NoiseInf0.001Cl1.npy')
-StdEst2= np.load('NoiseInf0.0005Cl1.npy')
-StdEst3 = np.load('NoiseInf0.003Cl1.npy')
+StdEst = np.load('NoiseInf0.001.npy')
+StdEst2= np.load('NoiseInf0.0005.npy')
+StdEst3 = np.load('NoiseInf0.003.npy')
+
+StdEstCl = np.load('NoiseInf0.001Cl1.npy')
+StdEstCl2 = np.load('NoiseInf0.0005Cl1.npy')
+StdEstCl3 = np.load('NoiseInf0.003Cl1.npy')
+
+
+med1 = np.median(StdEst[300:])
+med2 =np.median(StdEst2[300:])
+med3=np.median(StdEst3[300:])
+
+#medcl1=np.median(StdEstCl[300:])
+#medcl2=np.median(StdEstCl2[300:])
+#medcl3=np.median(StdEstCl3[300:])
+
+ci1 = stats.norm.interval(0.95,np.mean(StdEst[300:]),np.sqrt(np.var(StdEst[300:])))
+ci2 = stats.norm.interval(0.95,np.mean(StdEst2[300:]),np.sqrt(np.var(StdEst2[300:])))
+ci3 = stats.norm.interval(0.95,np.mean(StdEst3[300:]),np.sqrt(np.var(StdEst3[300:])))
+
+#cicl1 = stats.norm.interval(0.95,np.mean(StdEstCl[300:]),np.sqrt(np.var(StdEstCl[300:])))
+#cicl2 = stats.norm.interval(0.95,np.mean(StdEstCl2[300:]),np.sqrt(np.var(StdEstCl2[300:])))
+#cicl3 = stats.norm.interval(0.95,np.mean(StdEstCl3[300:]),np.sqrt(np.var(StdEstCl3[300:])))
 
 
 plt.figure()
 #sns.displot(StdEst[300:], kde=True,bins=100)
-#plt.xlim([0.004,0.007])
+plt.xlim([0,0.05])
 #plt.axvline(0.001,color='r',linestyle='--',label='True Value: 0.001')
-plt.plot(x,prior,'m--',label='Prior')
+#plt.plot(x,prior,label=r'$\alpha = 0.025, \beta = 5$')
+plt.plot(x,prior2,label=r'$\alpha = 5,  \beta = 350$')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
 plt.title('Prior distribution $\sigma$')
-#plt.axvline(np.mean(Theta1[300:,0]),label = 'mean')
+plt.xlabel('x')
+#plt.axvline(med1,linestyle = '-', color = 'm',label = 'Median')
+#plt.axvline(ci1[0],color='g',linestyle='--')
+#plt.axvline(ci1[1],color='g',linestyle='--',label='95% CI')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
-'''
-'''
+
 plt.figure()
 sns.displot(StdEst2[300:], kde=True,bins=100)
 #plt.xlim([0.004,0.007])
 plt.axvline(0.0005,color='r',linestyle='--',label='True Value: 0.0005')
-plt.plot(x,prior,'m--',label='Prior')
+#plt.plot(x,prior,'m--',label='Prior')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title('Posterior distribution $\sigma^2$')
-#plt.axvline(np.mean(Theta1[300:,0]),label = 'mean')
+plt.title('Posterior distribution $\sigma$')
+plt.axvline(med2,linestyle = '-', color = 'm',label = 'Median')
+plt.axvline(ci2[0],color='g',linestyle='--')
+plt.axvline(ci2[1],color='g',linestyle='--',label='95% CI')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
@@ -283,10 +312,54 @@ plt.figure()
 sns.displot(StdEst3[300:], kde=True,bins=100)
 #plt.xlim([0.004,0.007])
 plt.axvline(0.003,color='r',linestyle='--',label='True Value: 0.003')
-plt.plot(x,prior,'m--',label='Prior')
+#plt.plot(x,prior,'m--',label='Prior')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title('Posterior distribution $\sigma^2$')
-#plt.axvline(np.mean(Theta1[300:,0]),label = 'mean')
+plt.title('Posterior distribution $\sigma$')
+plt.axvline(med3,linestyle = '-', color = 'm',label = 'Median')
+plt.axvline(ci3[0],color='g',linestyle='--')
+plt.axvline(ci3[1],color='g',linestyle='--',label='95% CI')
+#plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
+plt.legend()
+plt.show()
+
+plt.figure()
+sns.displot(StdEstCl[300:], kde=True,bins=100)
+#plt.xlim([0.004,0.007])
+plt.axvline(0.001,color='r',linestyle='--',label='True Value: 0.001')
+#plt.plot(x,prior,'m--',label='Prior')
+#plt.plot(X,DensAp1.pdf(X),label='Scipy')
+plt.title('Posterior distribution $\sigma$')
+plt.axvline(medcl1,linestyle = '-', color = 'm',label = 'Median')
+plt.axvline(cicl1[0],color='g',linestyle='--')
+plt.axvline(cicl1[1],color='g',linestyle='--',label='95% CI')
+#plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
+plt.legend()
+plt.show()
+
+plt.figure()
+sns.displot(StdEstCl2[300:], kde=True,bins=100)
+#plt.xlim([0.004,0.007])
+plt.axvline(0.0005,color='r',linestyle='--',label='True Value: 0.0005')
+#plt.plot(x,prior,'m--',label='Prior')
+#plt.plot(X,DensAp1.pdf(X),label='Scipy')
+plt.title('Posterior distribution $\sigma$')
+plt.axvline(medcl2,linestyle = '-', color = 'm',label = 'Median')
+plt.axvline(cicl2[0],color='g',linestyle='--')
+plt.axvline(cicl2[1],color='g',linestyle='--',label='95% CI')
+#plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
+plt.legend()
+plt.show()
+
+plt.figure()
+sns.displot(StdEstCl3[300:], kde=True,bins=100)
+#plt.xlim([0.004,0.007])
+plt.axvline(0.003,color='r',linestyle='--',label='True Value: 0.003')
+#plt.plot(x,prior,'m--',label='Prior')
+#plt.plot(X,DensAp1.pdf(X),label='Scipy')
+plt.title('Posterior distribution $\sigma$')
+plt.axvline(medcl3,linestyle = '-', color = 'm',label = 'Median')
+plt.axvline(cicl3[0],color='g',linestyle='--')
+plt.axvline(cicl3[1],color='g',linestyle='--',label='95% CI')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()

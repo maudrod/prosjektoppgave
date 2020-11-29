@@ -113,7 +113,7 @@ plt.show()
 Potential interesting connections so far?
 Data19110: index 11v23, index 11v24
 Data19109: index 2v4
-Data19113: index 11v3!!!
+Data19113: index 11v3!!! (første test)
 Data18231 index 4v21?, GOD KANTIDAT: 7v32 (fra bin 30000:)??
 '''
 
