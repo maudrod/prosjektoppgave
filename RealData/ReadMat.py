@@ -49,21 +49,21 @@ data19115 = loadmat('camkii13_190115.spikes.cellinfo.mat')
 #st2 = np.concatenate(data19110['spikes']['times'][11]).round(1)
 #st3 = np.concatenate(data19110['spikes']['times'][23]).round(1)
 #st4 = np.concatenate(data19110['spikes']['times'][24]).round(1)
-'''
-st1 = np.concatenate(data19113['spikes']['times'][2]).round(1)
-st2 = np.concatenate(data19113['spikes']['times'][3]).round(1)
-st3 = np.concatenate(data19113['spikes']['times'][5]).round(1)
-st4 = np.concatenate(data19113['spikes']['times'][21]).round(1)
-st5 = np.concatenate(data19113['spikes']['times'][24]).round(1)
-st6 = np.concatenate(data19113['spikes']['times'][11]).round(1)
 
-#st1 = np.concatenate(data18231['spikes']['times'][2]).round(1)
-#st2 = np.concatenate(data18231['spikes']['times'][4]).round(1)
-#st3 = np.concatenate(data18231['spikes']['times'][7]).round(1)
-#st4 = np.concatenate(data18231['spikes']['times'][12]).round(1)
-#st5 = np.concatenate(data18231['spikes']['times'][15]).round(1)
+#st1 = np.concatenate(data19113['spikes']['times'][2]).round(1)
+#st2 = np.concatenate(data19113['spikes']['times'][3]).round(1)
+#st3 = np.concatenate(data19113['spikes']['times'][5]).round(1)
+#st4 = np.concatenate(data19113['spikes']['times'][21]).round(1)
+#st5 = np.concatenate(data19113['spikes']['times'][24]).round(1)
+#st6 = np.concatenate(data19113['spikes']['times'][11]).round(1)
+'''
+st1 = np.concatenate(data18231['spikes']['times'][2]).round(1)
+st2 = np.concatenate(data18231['spikes']['times'][4]).round(1)
+st3 = np.concatenate(data18231['spikes']['times'][7]).round(1)
+st4 = np.concatenate(data18231['spikes']['times'][12]).round(1)
+st5 = np.concatenate(data18231['spikes']['times'][15]).round(1)
 #st6 = np.concatenate(data18231['spikes']['times'][16]).round(1)
-#st7 = np.concatenate(data18231['spikes']['times'][17]).round(1)
+st6 = np.concatenate(data18231['spikes']['times'][17]).round(1)
 #st8 = np.concatenate(data18231['spikes']['times'][20]).round(1)
 #st9 = np.concatenate(data18231['spikes']['times'][21]).round(1)
 #st10 = np.concatenate(data18231['spikes']['times'][30]).round(1)
@@ -100,13 +100,13 @@ for i in range(bins):
     #    s10[i] = 1
     #if timesteps[i] in st11:
     #    s11[i] = 1
-
 '''
+
 x = [-100,-75,-50,-25,0,25,50,75,100]
 ms = ['-10','-7.5','-5','-2.5','0','2.5','5','7.5','10']
 plt.figure()
-plt.title('Cross-correlation of pre- and postsynaptic neuron')
-plt.xcorr(s6[40000:90000],s2[40000:90000],usevlines=True, maxlags=100, normed=True, lw=2)
+plt.title('Cross-correlation of non-connected neurons')
+plt.xcorr(s3,s6,usevlines=True, maxlags=100, normed=True, lw=2)
 plt.xticks(x,labels = ms)
 plt.xlabel('Timelag (ms)')
 plt.show()
