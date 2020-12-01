@@ -177,7 +177,63 @@ def MHsampler(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it
         theta_prior = np.copy(theta_choice)
         old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
     return theta
-        
+
+### ALSO DO ALT ###
+
+def adjust_variance2(theta, U, par_ind,N,it,shapes):
+    mean = np.zeros(N)
+    var_new = np.zeros(N)
+    theta_new = np.copy(theta[-1])
+    while (any(i == 0 for i in var_new)):
+        for i in range(N):
+            if i == 0:
+                mean[i] = theta[-U+1::2].mean(0)[i]
+                var_new[i] = theta[-U+1::2].var(0)[i]*(2.4**2)
+            elif i == 1:
+                mean[i] = theta[-U::2].mean(0)[i]
+                var_new[i] = theta[-U::2].var(0)[i]*(2.4**2)
+            else:
+                mean[i] = theta[-U:].mean(0)[i]
+                var_new[i] = theta[-U:].var(0)[i]*(2.4**2)
+        U += 100
+        if U > it:
+            return shapes, np.array([(np.random.gamma(shapes[i],theta[-1][i]/shapes[i])) for i in range(N)])
+    new_shapes = np.array([((mean[i]**2) / var_new[i]) for i in range(N)])
+    for i in par_ind:
+        theta_new[i] = np.random.gamma(new_shapes[i],theta[-1][i]/new_shapes[i])
+    return new_shapes,theta_new
+
+def MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,N):
+    '''
+    Monte Carlo sampling with particle filtering, algoritme 3
+    '''
+    #theta_prior = parameter_priors(shapes_prior,rates_prior)
+    theta_prior = np.array([0.001,0.005])
+    theta = np.array([theta_prior])
+    shapes = np.copy(shapes_prior)
+    par_ind = np.linspace(0,N-1,N).astype(int)
+    old_log_post = particle_filter(w0est,b2est,theta_prior,s1,s2,std,P,binsize,seconds)
+    for i in range(1,it):
+        ex = [1,0][i % 2 == 0] #oddetall iterasjoner, eksluder Tau (index 1), partall: Ap (index 0)
+        par_ind_temp = np.delete(par_ind,ex)
+        if (i % U == 0):
+            shapes, theta_next = adjust_variance2(theta,U,par_ind_temp,N,it,shapes)
+        else:    
+            theta_next = proposal_step(shapes,theta_prior,par_ind_temp)
+        new_log_post = particle_filter(w0est,b2est,theta_next,s1,s2,std,P,binsize,seconds)
+        prob_old,prob_next = scaled2_spike_prob(old_log_post,new_log_post)
+        r = ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior,N)
+        #print('old theta:', theta_prior)
+        #print('new theta:', theta_next)
+        #print('r:',r)
+        choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
+        theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
+        #print('choice:', theta_choice)
+        theta = np.vstack((theta, theta_choice))
+        theta_prior = np.copy(theta_choice)
+        old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
+    return theta
+
 '''
 PARAMETERS AND RUNNING OF ALGORITHM :
 '''        
@@ -195,6 +251,7 @@ U = 100
 it = 1500
 shapes_prior = np.array([4,5])
 rates_prior = np.array([50,100])
+N = 2
 
 w0est = -np.inf
 while (w0est < 0.97 or w0est > 1.03):
@@ -205,42 +262,57 @@ while (w0est < 0.97 or w0est > 1.03):
 
 
 Simest1 = MHsampler(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it)
+Altest1 = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,N)
 
 std = 0.0005
 
 
 Simest2 = MHsampler(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it)
+Altest2 = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,N)
 
 std = 0.001
 
 
 Simest3 = MHsampler(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it)
+Altest3 = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,N)
 
 std = 0.002
 
 Simest4 = MHsampler(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it)
+Altest4 = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,N)
 
 
 std = 0.003
 
 Simest5 = MHsampler(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it)
+Altest5 = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,N)
 
 
 std = 0.004
 
 Simest6 = MHsampler(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it)
+Altest6 = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,N)
 
 
 std = 0.005
 
 Simest7 = MHsampler(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it)
+Altest7 = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,N)
 
-np.save('Sim0.0001noise',Simest1)
-np.save('Sim0.0005noise',Simest2)
-np.save('Sim0.001noise',Simest3)
-np.save('Sim0.002noise',Simest4)
-np.save('Sim0.003noise',Simest5)
-np.save('Sim0.004noise',Simest6)
-np.save('Sim0.005noise',Simest7)
+np.save('Sim0.0001noiseSame',Simest1)
+np.save('Sim0.0005noiseSame',Simest2)
+np.save('Sim0.001noiseSame',Simest3)
+np.save('Sim0.002noiseSame',Simest4)
+np.save('Sim0.003noiseSame',Simest5)
+np.save('Sim0.004noiseSame',Simest6)
+np.save('Sim0.005noiseSame',Simest7)
+
+np.save('Alt0.0001noiseSame',Altest1)
+np.save('Alt0.0005noiseSame',Altest2)
+np.save('Alt0.001noiseSame',Altest3)
+np.save('Alt0.002noiseSame',Altest4)
+np.save('Alt0.003noiseSame',Altest5)
+np.save('Alt0.004noiseSame',Altest6)
+np.save('Alt0.005noiseSame',Altest7)
 
 

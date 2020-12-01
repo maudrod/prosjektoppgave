@@ -18,6 +18,8 @@ Datasets5 = np.load('ApInferenceData17to20.npy')
 
 Datasets = [Datasets1,Datasets2,Datasets3,Datasets4,Datasets5]
 
+
+'''
 maps1 = np.load("Maps0.0001.npy")
 maps2 = np.load("Maps0.0005.npy")
 maps3 = np.load("Maps0.001.npy")
@@ -110,7 +112,7 @@ plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
             
-'''    
+  
 HistAp1 = np.histogram(Datasets[1][0][0][300:],10000)
 DensAp1= hist(HistAp1)
 

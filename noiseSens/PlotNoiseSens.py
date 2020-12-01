@@ -70,7 +70,7 @@ plt.show()
 
 '''
 Tau analysis
-'''
+
 
 Tau1 = np.load('Tau0.0001noise.npy')
 Tau2 = np.load('Tau0.0005noise.npy')
@@ -97,6 +97,7 @@ Tauvar7 = np.var(Tau7[300:])
 
 Taumeans = [Taumean1,Taumean2,Taumean3,Taumean4,Taumean5,Taumean6,Taumean7]
 Taustds = [np.sqrt(Tauvar1),np.sqrt(Tauvar2),np.sqrt(Tauvar3),np.sqrt(Tauvar4),np.sqrt(Tauvar5),np.sqrt(Tauvar6),np.sqrt(Tauvar7)]
+'''
 '''
 plt.figure()
 plt.title('Sensitivity of noise')
@@ -170,16 +171,30 @@ SimApmean6 = np.mean(Sim6[300:,0])
 SimApvar6 = np.var(Sim6[300:,0])
 SimApmean7 = np.mean(Sim7[300:,0])
 SimApvar7 = np.var(Sim7[300:,0])
-
+x = [1,2,3,4,5,6,7]
+ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
 TaumeansSim = [SimTaumean1,SimTaumean2,SimTaumean3,SimTaumean4,SimTaumean5,SimTaumean6,SimTaumean7]
 TaustdsSim = [np.sqrt(SimTauvar1),np.sqrt(SimTauvar2),np.sqrt(SimTauvar3),np.sqrt(SimTauvar4),np.sqrt(SimTauvar5),np.sqrt(SimTauvar6),np.sqrt(SimTauvar7)]
 
 ApmeansSim = [SimApmean1,SimApmean2,SimApmean3,SimApmean4,SimApmean5,SimApmean6,SimApmean7]
 ApstdsSim = [np.sqrt(SimApvar1),np.sqrt(SimApvar2),np.sqrt(SimApvar3),np.sqrt(SimApvar4),np.sqrt(SimApvar5),np.sqrt(SimApvar6),np.sqrt(SimApvar7)]
 
-
 plt.figure()
-plt.title('Sensitivity of noise')
+sns.displot(Sim1[300:,1], kde=True,bins=100)
+#plt.xlim([0.004,0.007])
+plt.xlabel('Tau')
+plt.axvline(0.02,color='r',linestyle='--',label='True Value')
+plt.title('Posterior distribution Tau - $\sigma = 0.0001$')
+#plt.plot(X,DensAp1.pdf(X),label='Scipy')
+#plt.title('Posterior distribution Tau - 0.001 noise')
+#plt.axvline(np.mean(Theta1[300:,0]),label = 'mean')
+#plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
+plt.legend()
+plt.show()
+'''
+'''
+plt.figure()
+plt.title('Sensitivity of noise - Tau')
 plt.xlabel('Noise')
 plt.ylabel('Tau estimation')
 plt.ylim([-0.06,0.1])
@@ -193,9 +208,9 @@ plt.show()
 
 
 plt.figure()
-plt.title('Sensitivity of noise')
+plt.title('Sensitivity of noise - $A_+$')
 plt.xlabel('Noise')
-plt.ylabel('Ap estimation')
+plt.ylabel('$A_+$ estimation')
 plt.ylim([0.002,0.008])
 plt.xlim([0,8])
 plt.xticks(x,labels = ticksss)
@@ -204,17 +219,8 @@ for i in range(7):
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
-plt.figure()
-plt.title('Ap inference - 0.005 noise')
-plt.xlabel('Iteration')
-plt.ylabel('Ap')
-plt.ylim([0,0.01])
-plt.plot(np.linspace(1,1500,1500),Ap7,'ko')
-plt.axhline(0.005,color='r',linestyle='--',label='True Value')
-plt.legend()
-plt.show()
 '''
+
 '''
 Alternating analaysis
 '''
@@ -310,29 +316,44 @@ TaustdsAltB = [np.sqrt(AltTauvarB1),np.sqrt(AltTauvarB2),np.sqrt(AltTauvarB3),np
 
 ApmeansAltB = [AltApmeanB1,AltApmeanB2,AltApmeanB3,AltApmeanB4,AltApmeanB5,AltApmeanB6,AltApmeanB7]
 ApstdsAltB = [np.sqrt(AltApvarB1),np.sqrt(AltApvarB2),np.sqrt(AltApvarB3),np.sqrt(AltApvarB4),np.sqrt(AltApvarB5),np.sqrt(AltApvarB6),np.sqrt(AltApvarB7)]
-'''
-plt.figure()
-plt.plot(Alt7Big[:,1],Alt7Big[:,0],'ko')
-plt.show()
-'''
+
 x = [1,2,3,4,5,6,7]
 ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
-
-
+'''
 plt.figure()
-sns.displot(Alt1True[300:,1], kde=True)
-plt.axvline(0.02,color='r',linestyle='--',label='True Value')
+sns.displot(Alt7True[300:,0], kde=True)
+plt.xlabel('$A_+$')
+plt.axvline(0.005,color='r',linestyle='--',label='True Value')
 #plt.xlim([0.003,0.007])
 plt.legend()
-plt.title('Posterior distribution Tau - 0.0001 noise')
+plt.title('Posterior distribution $A_+$ - 0.005 noise')
 plt.show()
+'''
 
 plt.figure()
-plt.title('Tau inference - 0.0001 noise')
-plt.xlabel('Iteration')
-plt.ylabel('Tau')
-#plt.ylim([0,0.01])
-plt.plot(np.linspace(1,1500,1500),Alt1True[:,1],'ko')
+plt.title('Sensitivity of noise - Tau')
+plt.xlabel('Noise')
+plt.ylabel('Tau estimation')
+plt.ylim([-0.06,0.1])
+plt.xlim([0,8])
+plt.xticks(x,labels = ticksss)
+for i in range(7):
+    plt.errorbar(x[i], TaumeansAltT[i], yerr = TaustdsAltT[i],marker = 'o')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
+
+
+plt.figure()
+plt.title('Sensitivity of noise - $A_+$')
+plt.xlabel('Noise')
+plt.ylabel('$A_+$ estimation')
+plt.ylim([0.002,0.008])
+plt.xlim([0,8])
+plt.xticks(x,labels = ticksss)
+for i in range(7):
+    plt.errorbar(x[i], ApmeansAltT[i], yerr = ApstdsAltT[i],marker = 'o')
+plt.axhline(0.005,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+

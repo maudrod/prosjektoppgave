@@ -16,15 +16,42 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r cars}
-summary(cars)
+library(RcppCNPy)
+library(EnvStats)
+Tau1ms1 <- npyLoad("Tau0.0001noise1msB35.npy")
+Tau1ms2 <- npyLoad("Tau0.001noise2msB35.npy")
+Tau1ms3 <- npyLoad("Tau0.003noise2msB35.npy")
+Tau1ms4 <- npyLoad("Tau0.005noise2msB35.npy")
+
+Tau1 <- npyLoad("Tau0.0001noise2msB275.npy")
+Tau2 <- npyLoad("Tau0.001noise2msB275.npy")
+Tau3 <- npyLoad("Tau0.003noise2msB275.npy")
+Tau4 <- npyLoad("Tau0.005noise2msB275.npy")
+
+
+#y <- lapply(x, FUN = dens, Data1_1)
+#MAP = (which.max(unlist(y)) - 1)*stepsize
+stepsize <- 0.00001
+dens <- function(x,Data=Data1_1){
+  return (demp(x,Data))
+}
+x <- seq(from = 0, to = 0.1, by = stepsize)
+
+Maps1 = c() #1ms 
+Maps2 = c() #2ms 
+
+Maps1 <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau1ms1[c(300:1500)]))) - 1)*stepsize)
+Maps1 <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau1ms2[c(300:1500)]))) - 1)*stepsize)
+Maps1 <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau1ms3[c(300:1500)]))) - 1)*stepsize)
+Maps1 <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau1ms4[c(300:1500)]))) - 1)*stepsize)
+
+Maps2 <<- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, Tau1[c(300:1500)]))) - 1)*stepsize)
+Maps2 <<- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, Tau2[c(300:1500)]))) - 1)*stepsize)
+Maps2 <<- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, Tau3[c(300:1500)]))) - 1)*stepsize)
+Maps2 <<- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, Tau4[c(300:1500)]))) - 1)*stepsize)
+
+npySave("Maps1msNotSameData.npy",Maps1)
+npySave("Maps2msNotSameData.npy",Maps2)
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
