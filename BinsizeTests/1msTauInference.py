@@ -203,44 +203,24 @@ while (w0est < 0.97 or w0est > 1.03):
     b2est = infer_b2_w0(s1, s2, 1e-10)[0]
     w0est = infer_b2_w0(s1[:10000], s2[:10000], 1e-10)[1]
 
-w0est3 = -np.inf
-while (w0est3 < 0.97 or w0est3 > 1.03):
-    s13,s23,t,W3 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
-    b1est3 = infer_b1(s13)
-    b2est3 = infer_b2_w0(s13, s23, 1e-10)[0]
-    w0est3 = infer_b2_w0(s13[:10000], s23[:10000], 1e-10)[1]
-
-w0est5 = -np.inf
-while (w0est5 < 0.97 or w0est5 > 1.03):
-    s15,s25,t,W5 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
-    b1est5 = infer_b1(s15)
-    b2est5 = infer_b2_w0(s15, s25, 1e-10)[0]
-    w0est5 = infer_b2_w0(s15[:10000], s25[:10000], 1e-10)[1]
-
-w0est7 = -np.inf
-while (w0est7 < 0.97 or w0est7 > 1.03):
-    s17,s27,t,W7 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
-    b1est7 = infer_b1(s17)
-    b2est7 = infer_b2_w0(s17, s27, 1e-10)[0]
-    w0est7 = infer_b2_w0(s17[:10000], s27[:10000], 1e-10)[1]
 
 Tauest1 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, Ap)
 
 std = 0.001
 
 
-Tauest3 = MHsampler2(w0est3, b2est3, shapes_prior, rates_prior, s13, s23, std, P, binsize, seconds, U, it, Ap)
+Tauest3 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, Ap)
 
 std = 0.003
 
-Tauest5 = MHsampler2(w0est5, b2est5, shapes_prior, rates_prior, s15, s25, std, P, binsize, seconds, U, it, Ap)
+Tauest5 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, Ap)
 
 
 std = 0.005
 
-Tauest7 = MHsampler2(w0est7, b2est7, shapes_prior, rates_prior, s17, s27, std, P, binsize, seconds, U, it, Ap)
+Tauest7 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, Ap)
 
-np.save('Tau0.0001noise1msB35',Tauest1)
-np.save('Tau0.001noise2msB35',Tauest3)
-np.save('Tau0.003noise2msB35',Tauest5)
-np.save('Tau0.005noise2msB35',Tauest7)
+np.save('Tau0.0001noise1msB35same',Tauest1)
+np.save('Tau0.001noise1msB35same',Tauest3)
+np.save('Tau0.003noise1msB35same',Tauest5)
+np.save('Tau0.005noise1msB35same',Tauest7)

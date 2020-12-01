@@ -12,19 +12,23 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r MAP}
 library(RcppCNPy)
 library(EnvStats)
-Data = npyLoad("Data1.npy")
+ApSim = npyLoad("ApEstData19113Ind11v6Sim.npy")
+TauSim = npyLoad("TauEstData19113Ind11v6Sim.npy")
+ApAlt = npyLoad("ApEstData19113Ind11v6.npy")
+TauAlt = npyLoad("TauEstData19113Ind11v6.npy")
 stepsize <- 0.00001
 dens <- function(x,Data=Data1_1){
   return (demp(x,Data))
 }
 x <- seq(from = 0, to = 0.01, by = stepsize)
 
-Map = (which.max(unlist(lapply(x, FUN = dens, Data[i,c(300:1500)]))) - 1)*stepsize
-
-calculateMaps <- function(Data,stepsize,x,Maps1,Maps2,Maps3,Maps4,Maps5){
-  for (i in 1:5){ 
-  if (i==1) {
-    Maps1 <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Data[i,c(300:1500)]))) - 1)*stepsize)
-  }
+MapApSim = which.max(unlist(lapply(x, FUN = dens, ApSim[c(500:1200)])) - 1)*stepsize
+MapTauSim =  which.max(unlist(lapply(x, FUN = dens, TauSim)) - 1)*stepsize
+MapApAlt =  which.max(unlist(lapply(x, FUN = dens, ApAlt[c(500:1200)])) - 1)*stepsize
+MapTauAlt =  which.max(unlist(lapply(x, FUN = dens, TauAlt)) - 1)*stepsize
+npySave("MapApData19113Ind11v6Sim.npy",MapApSim)
+npySave("MapTauData19113Ind11v6Sim.npy",MapTauSim)
+npySave("MapApData19113Ind11v6.npy",MapApAlt)
+npySave("MapTauData19113Ind11v6.npy",MapTauAlt)
 ```
 
