@@ -8,8 +8,8 @@ Created on Tue Nov 24 17:43:36 2020
 import numpy as np              
 import matplotlib.pyplot as plt 
 from scipy.stats import gamma
-#from scipy import stats
-#import seaborn as sns
+from scipy import stats
+import seaborn as sns
 from numba import njit
 @njit
 
@@ -196,13 +196,13 @@ U = 100
 it = 1500
 shapes_prior = 5
 rates_prior = 800
+'''
 
-'''
-estimate_noise = False 
-N = [2,3][estimate_noise == True] #number of parameters to estimate
-shapes_prior = [np.array([4,5]),np.array([4,5,5])][estimate_noise == True]
-rates_prior = [np.array([50,100]),np.array([50,100,350])][estimate_noise == True]
-'''
+#estimate_noise = False 
+#N = [2,3][estimate_noise == True] #number of parameters to estimate
+#shapes_prior = [np.array([4,5]),np.array([4,5,5])][estimate_noise == True]
+#rates_prior = [np.array([50,100]),np.array([50,100,350])][estimate_noise == True]
+
 
 w0est = -np.inf
 while (w0est < 0.97 or w0est > 1.03):
@@ -212,12 +212,11 @@ while (w0est < 0.97 or w0est > 1.03):
     w0est = infer_b2_w0(s1[:2000], s2[:2000], 1e-10)[1]
 
 
-'''
-stds = [0.00001,0.00003,0.00005,0.00007,0.00009,0.0001,0.00011,0.00013,0.00015,0.0002,0.00025,0.0003,0.0005,0.001,0.0015,0.002,0.003,0.005]
-loglikes = []
-for stdd in tqdm(stds):
-    loglikes.append(particle_filter(w0est, b2est, Ap, tau, s1, s2, stdd, P, binsize, seconds))
-'''
+
+#stds = [0.00001,0.00003,0.00005,0.00007,0.00009,0.0001,0.00011,0.00013,0.00015,0.0002,0.00025,0.0003,0.0005,0.001,0.0015,0.002,0.003,0.005]
+#loglikes = []
+#for stdd in tqdm(stds):
+#    loglikes.append(particle_filter(w0est, b2est, Ap, tau, s1, s2, stdd, P, binsize, seconds))
 
 StdEst = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,P,binsize,seconds,U,it,Ap,tau)
 
@@ -246,19 +245,23 @@ np.save('NoiseInf0.0005_beta800',StdEst2)
 np.save('NoiseInf0.001_beta800',StdEst)
 np.save('NoiseInf0.003_beta800',StdEst3)
 
-
 '''
+StdEst  = np.load('NoiseInf0.001_beta800.npy')
+StdEst2  = np.load('NoiseInf0.0005_beta800.npy')
+StdEst3  = np.load('NoiseInf0.003_beta800.npy')
+
+
 x = np.linspace(0,0.05,100000)
 prior = gamma.pdf(x,a=shapes_prior,scale=1/rates_prior)
 prior2 = gamma.pdf(x,a=5,scale=1/800)
 
-StdEst = np.load('NoiseInf0.001.npy')
-StdEst2= np.load('NoiseInf0.0005.npy')
-StdEst3 = np.load('NoiseInf0.003.npy')
+#StdEst = np.load('NoiseInf0.001.npy')
+#StdEst2= np.load('NoiseInf0.0005.npy')
+#StdEst3 = np.load('NoiseInf0.003.npy')
 
-StdEstCl = np.load('NoiseInf0.001Cl1.npy')
-StdEstCl2 = np.load('NoiseInf0.0005Cl1.npy')
-StdEstCl3 = np.load('NoiseInf0.003Cl1.npy')
+#StdEstCl = np.load('NoiseInf0.001Cl1.npy')
+#StdEstCl2 = np.load('NoiseInf0.0005Cl1.npy')
+#StdEstCl3 = np.load('NoiseInf0.003Cl1.npy')
 
 
 med1 = np.median(StdEst[300:])
@@ -279,17 +282,17 @@ ci3 = stats.norm.interval(0.95,np.mean(StdEst3[300:]),np.sqrt(np.var(StdEst3[300
 
 
 plt.figure()
-#sns.displot(StdEst[300:], kde=True,bins=100)
-plt.xlim([0,0.05])
-#plt.axvline(0.001,color='r',linestyle='--',label='True Value: 0.001')
+sns.displot(StdEst[300:], kde=True,bins=100)
+#plt.xlim([0,0.05])
+plt.axvline(0.001,color='r',linestyle='--',label='True Value: 0.001')
 #plt.plot(x,prior,label=r'$\alpha = 0.025, \beta = 5$')
-plt.plot(x,prior2,label=r'$\alpha = 5,  \beta = 350$')
+#plt.plot(x,prior2,label=r'$\alpha = 5,  \beta = 800$')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
 plt.title('Prior distribution $\sigma$')
 plt.xlabel('x')
-#plt.axvline(med1,linestyle = '-', color = 'm',label = 'Median')
-#plt.axvline(ci1[0],color='g',linestyle='--')
-#plt.axvline(ci1[1],color='g',linestyle='--',label='95% CI')
+plt.axvline(med1,linestyle = '-', color = 'm',label = 'Median')
+plt.axvline(ci1[0],color='g',linestyle='--')
+plt.axvline(ci1[1],color='g',linestyle='--',label='95% CI')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
@@ -321,7 +324,7 @@ plt.axvline(ci3[1],color='g',linestyle='--',label='95% CI')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
-
+'''
 plt.figure()
 sns.displot(StdEstCl[300:], kde=True,bins=100)
 #plt.xlim([0.004,0.007])

@@ -44,10 +44,16 @@ for i in range(5):
         medians.append(medians_temp) 
         varrs.append(varrs_temp)
         means.append(means_temp)
-        
+
+meansvar = np.sqrt(np.asarray(means).var(0))     
 means = np.asarray(means).mean(0)
+
+mediansvar = np.sqrt(np.asarray(medians).var(0))
 medians = np.asarray(medians).mean(0)
+
+mapsvar = np.sqrt(np.asarray(maps).var(1))
 maps = np.asarray(maps).mean(1)
+
 varrs = np.asarray(varrs).mean(0)
 varrs = np.sqrt(varrs)
 
@@ -55,14 +61,19 @@ x = [1,2,3,4,5]
 ticksss = ['0.0001','0.0005','0.001','0.003','0.005']
 
 plt.figure()
-plt.title('Mean of posterior mean - 20 datasets')
+plt.title('Mean of posterior means - 20 datasets')
 plt.xlabel('Noise')
 plt.ylabel('Ap estimation')
 plt.ylim([0.004,0.007])
 plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
-    plt.errorbar(x[i], means[i], yerr = varrs[i],marker = 'o')
+    if i == 1:
+        plt.errorbar(x[i], means[i], yerr = meansvar[i],c='c',marker = 'o',label='Std of means',ecolor='c')
+        #plt.errorbar(x[i], means[i], yerr = varrs[i],marker = 'o',label='Std of samples',barsabove=(True))
+    else:
+        plt.errorbar(x[i], means[i], yerr = meansvar[i],c='c',marker = 'o',ecolor='c')#,label='Std of means')
+        #plt.errorbar(x[i], means[i], yerr = varrs[i],marker = 'o')#,label='Std of samples')
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
@@ -75,20 +86,26 @@ plt.ylim([0.004,0.007])
 plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
-    plt.errorbar(x[i], maps[i], yerr = varrs[i],marker = 'o')
+    if i == 1:
+        plt.errorbar(x[i], maps[i], yerr = mapsvar[i],c='c',marker = 'o',label='Std of MAPs',ecolor='c')
+    else:
+        plt.errorbar(x[i], maps[i], yerr = mapsvar[i],c='c',marker = 'o',ecolor='c')
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 
 plt.figure()
-plt.title('Mean of medians - 20 datasets')
+plt.title('Mean of posterior medians - 20 datasets')
 plt.xlabel('Noise')
 plt.ylabel('Ap estimation')
 plt.ylim([0.004,0.007])
 plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
-    plt.errorbar(x[i], medians[i], yerr = varrs[i],marker = 'o')
+    if i == 1:
+        plt.errorbar(x[i], medians[i], yerr = mediansvar[i],c='c',marker = 'o',label='Std of medians',ecolor='c')
+    else:
+        plt.errorbar(x[i], medians[i],c='c', yerr = mediansvar[i],marker = 'o',ecolor='c')
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()

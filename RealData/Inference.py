@@ -258,8 +258,22 @@ for i in range(1,timesteps):
     t[i] = binsize*i
 '''
 
-plot_gen_weight(t, Traj)
-
+#plot_gen_weight(t, Traj)
+plt.figure()
+#sns.displot(ApSim,bins=10000)
+#plt.xlim([0.00,0.001])
+plt.plot(TauAlt,ApAlt,'ko')
+plt.ylabel('$A_+$')
+plt.xlabel('Tau')
+#plt.axvline(mapApSim,color='r',linestyle='--',label='Map')
+#plt.axvline(medApSim,color='g',linestyle='--',label='Median')
+#plt.axvline(meanApSim,color='m',linestyle='--',label='Mean')
+#plt.plot(X,DensAp1.pdf(X),label='Scipy')
+plt.title('Tau v $A_+$ - Alternating Proposals - 0.0001 noise')
+#plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
+#plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
+plt.legend()
+plt.show()
 '''
 plt.figure()
 #sns.displot(ApSim,bins=10000)
