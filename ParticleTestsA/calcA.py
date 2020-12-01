@@ -164,6 +164,7 @@ def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,i
     shapes = np.copy(shapes_prior)
     old_log_post = particle_filter(w0,b2est,theta_prior,s1,s2,std,P,binsize,seconds,tau)[0]
     for i in range(1,it):
+        print("iteration",i)
         if (i % U == 0):
             theta_change = np.copy(theta[:i])
             shapes, theta_next = adjust_variance(theta_change,U,it,shapes)
@@ -207,7 +208,7 @@ fast_tau = 0.02
 
 
 
-for i in range(0,20): 
+for i in range(0,10): 
     stri = str(i)
     
     s1 = np.load("s1_dataset"+stri+".npy")
