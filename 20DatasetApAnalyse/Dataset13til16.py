@@ -180,7 +180,7 @@ def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,i
 '''
 PARAMETERS AND RUNNING OF ALGORITHM :
 '''        
-std = 0.0001
+std = 0.005
 w0 = 1.0
 b1 = -2
 b2 = -2
@@ -222,9 +222,9 @@ for i in range(4):
     Aps.append(Aps_temp)
     
 
-np.save('S1Datasets13to16',s1s)
-np.save('S2Datasets13to16',s2s)
-np.save('b1sDatasets13to16',b1ests)
-np.save('b2sDatasets13to16',b2ests)
-np.save('ApInferenceData13to16',Aps)
-np.save('w0ests13to16',w0ests)
+#np.save('S1Datasets1to4Opposite',s1s)
+#np.save('S2Datasets1to4Opposite',s2s)
+#np.save('b1sDatasets1to4Opposite',b1ests)
+#np.save('b2sDatasets1to4Opposite',b2ests)
+np.save('ApInferenceData13to16Opposite',Aps)
+#np.save('w0ests1to4Opposite',w0ests)
