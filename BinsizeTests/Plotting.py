@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-
+'''
 
 Taus = np.load('Taus.npy')
 w0ests2ms = np.load('w0estimates_2ms.npy')
@@ -82,6 +82,7 @@ Tau1mslows = []
 
 for i in range(len(w0lows1ms[0])):
     Tau1mslows.append(loglikesTau1ms[w0lows1ms[0][i].astype(int)])
+'''
 '''
 plt.figure()
 plt.title('Tau loglikelihood - Good estimate w0 - 2ms')
@@ -227,6 +228,7 @@ plt.axvline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
+'''
 plt.figure()
 plt.title('Loglikelihoods for a high $w^0$ estimation - 1ms binsize ')
 plt.xlabel('Tau')
@@ -249,6 +251,7 @@ Tau1 = np.load('Tau0.0001noise2msB275.npy')
 Tau2 = np.load('Tau0.001noise2msB275.npy')
 Tau3 = np.load('Tau0.003noise2msB275.npy')
 Tau4 = np.load('Tau0.005noise2msB275.npy')
+'''
 '''
 plt.figure()
 sns.displot(Tau1[300:], kde=True,bins=100)
@@ -354,3 +357,4 @@ plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
+
