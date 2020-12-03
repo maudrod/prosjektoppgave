@@ -150,7 +150,7 @@ plt.xlabel('Ap')
 plt.ylabel('Loglikelihood')
 plt.plot(Aps,np.asarray(Aploglikesgood10pr).mean(0),label='mean')
 plt.show()
-'''
+
 plt.figure()
 plt.title('Ap loglikelihood - Good estimate w0 - $w0 \sim \delta(w_0)$')
 plt.xlabel('Ap')
@@ -159,7 +159,7 @@ plt.plot(Aps,np.asarray(AploglikesgoodDelta).mean(0),label='Mean 200 datasets')
 plt.axvline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
+
 plt.figure()
 plt.title('Ap loglikelihood - Low estimate for w0 - $w0 \sim Norm(w0,w0/100)$')
 plt.xlabel('Ap')
@@ -173,7 +173,7 @@ plt.xlabel('Ap')
 plt.ylabel('Loglikelihood')
 plt.plot(Aps,np.asarray(Aploglikeslow10pr).mean(0),label='mean')
 plt.show()
-'''
+
 plt.figure()
 plt.title('Ap loglikelihood - Low estimate w0 - $w0 \sim \delta(w_0)$')
 plt.xlabel('Ap')
@@ -182,7 +182,7 @@ plt.plot(Aps,np.asarray(AploglikeslowDelta).mean(0),label='Mean 200 datasets')
 plt.axvline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
+
 plt.figure()
 plt.title('Ap loglikelihood - High estimate for w0 - $w0 \sim Norm(w0,w0/100)$')
 plt.xlabel('Ap')
@@ -196,7 +196,7 @@ plt.xlabel('Ap')
 plt.ylabel('Loglikelihood')
 plt.plot(Aps,np.asarray(Aploglikeshigh10pr).mean(0),label='mean')
 plt.show()
-'''
+
 plt.figure()
 plt.title('Ap loglikelihood - High estimate w0 - $w0 \sim \delta(w_0)$')
 plt.xlabel('Ap')
@@ -213,14 +213,14 @@ for i in range(200):
     PeakApsDelta.append(Aps[ApPeaksDelta[i][0].astype(int)][0])
 PeakApsDelta = np.asarray(PeakApsDelta)
 
-df = pd.DataFrame(data={'w0 estimate': w0estsDelta, 'Ap': np.asarray(PeakApsDelta)})
+df = pd.DataFrame(data={'$w^0$ estimate': w0estsDelta, '$A_+$: max $P(s_2^{(0:T)}$ given $A_+$)': np.asarray(PeakApsDelta)})
 
 
 sns.jointplot(
     data=df,
-    x="w0 estimate", y="Ap",
-    kind="reg",xlim=(0.4,1.6),color='y',marginal_kws={'lw':3, 'color':'red'})
-plt.plot(1,0.005,'ro',label='True Value')
+    x="$w^0$ estimate", y="$A_+$: max $P(s_2^{(0:T)}$ given $A_+$)",
+    kind="kde",xlim=(0.4,1.6),color='b',marginal_kws={'lw':3, 'color':'red'})
+#plt.plot(1,0.005,'ro',label='True Value')
 plt.legend()
 plt.show()
 '''
@@ -236,14 +236,14 @@ plt.plot(Taus,np.asarray(Tauloglikesgood1pr).mean(0),label='Mean 200 datasets')
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
+
 plt.figure()
 plt.title('Tau loglikelihood - Good estimate for w0 - $w0 \sim Norm(w0,w0/10)$')
 plt.xlabel('Tau')
 plt.ylabel('Loglikelihood')
 plt.plot(Taus,np.asarray(Tauloglikesgood10pr).mean(0),label='mean')
 plt.show()
-'''
+
 plt.figure()
 plt.title('Tau loglikelihood - Good estimate w0 - $w0 \sim \delta(w_0)$')
 plt.xlabel('Tau')
@@ -252,7 +252,7 @@ plt.plot(Taus,np.asarray(TauloglikesgoodDelta).mean(0),label='Mean 200 datasets'
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
+
 plt.figure()
 plt.title('Tau loglikelihood - Low estimate for w0 - $w0 \sim Norm(w0,w0/100)$')
 plt.xlabel('Tau')
@@ -266,7 +266,7 @@ plt.xlabel('Tau')
 plt.ylabel('Loglikelihood')
 plt.plot(Taus,np.asarray(Tauloglikeslow10pr).mean(0),label='mean')
 plt.show()
-'''
+
 plt.figure()
 plt.title('Tau loglikelihood - Low estimate w0 - $w0 \sim \delta(w_0)$')
 plt.xlabel('Tau')
@@ -275,7 +275,7 @@ plt.plot(Taus,np.asarray(TauloglikeslowDelta).mean(0),label='Mean 200 datasets')
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
+
 plt.figure()
 plt.title('Tau loglikelihood - High estimate for w0 - $w0 \sim Norm(w0,w0/100)$')
 plt.xlabel('Tau')
@@ -289,7 +289,7 @@ plt.xlabel('Tau')
 plt.ylabel('Loglikelihood')
 plt.plot(Taus,np.asarray(Tauloglikeshigh10pr).mean(0),label='mean')
 plt.show()
-'''
+
 plt.figure()
 plt.title('Tau loglikelihood - High estimate w0 - $w0 \sim \delta(w_0)$')
 plt.xlabel('Tau')
@@ -298,3 +298,4 @@ plt.plot(Taus,np.asarray(TauloglikeshighDelta).mean(0),label='Mean 200 datasets'
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
+'''

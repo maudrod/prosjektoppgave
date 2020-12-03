@@ -133,7 +133,7 @@ plt.show()
 '''
 Simultaneous
 '''
-'''
+
 Sim1 = np.load('Sim0.0001noise.npy')
 Sim2 = np.load('Sim0.0005noise.npy')
 Sim3 = np.load('Sim0.001noise.npy')
@@ -180,18 +180,18 @@ ApmeansSim = [SimApmean1,SimApmean2,SimApmean3,SimApmean4,SimApmean5,SimApmean6,
 ApstdsSim = [np.sqrt(SimApvar1),np.sqrt(SimApvar2),np.sqrt(SimApvar3),np.sqrt(SimApvar4),np.sqrt(SimApvar5),np.sqrt(SimApvar6),np.sqrt(SimApvar7)]
 
 plt.figure()
-sns.displot(Sim1[300:,1], kde=True,bins=100)
-#plt.xlim([0.004,0.007])
-plt.xlabel('Tau')
-plt.axvline(0.02,color='r',linestyle='--',label='True Value')
-plt.title('Posterior distribution Tau - $\sigma = 0.0001$')
+sns.displot(Alt1True[300:,0], kde=True,bins=100)
+plt.xlim([0.004,0.0075])
+plt.xlabel('$A_+$')
+plt.axvline(0.005,color='r',linestyle='--',label='True Value')
+plt.title('Posterior distribution $A_+$ - $\sigma = 0.0002$')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
 #plt.title('Posterior distribution Tau - 0.001 noise')
 #plt.axvline(np.mean(Theta1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
-'''
+
 '''
 plt.figure()
 plt.title('Sensitivity of noise - Tau')
@@ -224,7 +224,7 @@ plt.show()
 '''
 Alternating analaysis
 '''
-
+'''
 Alt1True = np.load('Tau0.02Ap0.005Alt0.0001noise.npy')
 Alt2True = np.load('Tau0.02Ap0.005Alt0.0005noise.npy')
 Alt3True  = np.load('Tau0.02Ap0.005Alt0.001noise.npy')
@@ -319,7 +319,7 @@ ApstdsAltB = [np.sqrt(AltApvarB1),np.sqrt(AltApvarB2),np.sqrt(AltApvarB3),np.sqr
 
 x = [1,2,3,4,5,6,7]
 ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
-'''
+
 plt.figure()
 sns.displot(Alt7True[300:,0], kde=True)
 plt.xlabel('$A_+$')
@@ -328,7 +328,7 @@ plt.axvline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.title('Posterior distribution $A_+$ - 0.005 noise')
 plt.show()
-'''
+
 
 plt.figure()
 plt.title('Sensitivity of noise - Tau')
@@ -356,4 +356,25 @@ for i in range(7):
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
+'''
+'''
+#AltVsim SAMME DATASETT
+
+Alt1Same = np.load('Alt0.0001noiseSame')
+Alt2Same = np.load('Alt0.0005noiseSame')
+Alt3Same = np.load('Alt0.001noiseSame')
+Alt4Same = np.load('Alt0.002noiseSame')
+Alt5Same = np.load('Alt0.003noiseSame')
+Alt6Same = np.load('Alt0.004noiseSame')
+Alt7Same = np.load('Alt0.005noiseSame')
+
+Sim1Same = np.load('Sim0.0001noiseSame')
+Sim2Same = np.load('Sim0.0005noiseSame')
+Sim3Same = np.load('Sim0.001noiseSame')
+Sim4Same = np.load('Sim0.002noiseSame')
+Sim5Same = np.load('Sim0.003noiseSame')
+Sim6Same = np.load('Sim0.004noiseSame')
+Sim7Same = np.load('Sim0.005noiseSame')
+
+'''
 
