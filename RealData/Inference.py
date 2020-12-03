@@ -8,8 +8,8 @@ Created on Fri Nov 27 18:20:28 2020
 import numpy as np              
 import matplotlib.pyplot as plt 
 from scipy.stats import gamma
-from tqdm import tqdm
-import seaborn as sns
+#from tqdm import tqdm
+#import seaborn as sns
 from numba import njit
 @njit
 
@@ -20,8 +20,8 @@ def learning_rule(s1,s2,Ap,Am,taup,taum,t,i,binsize):
     t : numpy array with the measured time points
     Ap,Am,taup,taum : learning rule parameters 
     '''
-    #l = i - np.int(np.ceil(10*taup / binsize))
-    return s2[i-1]*np.sum(s1[:i]*Ap*np.exp((t[:i]-max(t))/taup)) - s1[i-1]*np.sum(s2[:i]*Am*np.exp((t[:i]-max(t))/taum))
+    l = i - np.int(np.ceil(10*taup / binsize))
+    return s2[i-1]*np.sum(s1[max([l,0]):i]*Ap*np.exp((t[max([l,0]):i]-max(t))/taup)) - s1[i-1]*np.sum(s2[max([l,0]):i]*Am*np.exp((t[max([l,0]):i]-max(t))/taum))
 
 def logit(x):
     return np.log(x/(1-x))
@@ -176,7 +176,7 @@ def MHsampler(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,timesteps
     shapes = np.copy(shapes_prior)
     par_ind = np.linspace(0,N-1,N).astype(int)
     old_log_post = particle_filter(w0est,b2est,theta_prior,s1,s2,std,P,binsize,timesteps)
-    for i in tqdm(range(1,it)):
+    for i in range(1,it):
         ex = [1,0][i % 2 == 0] #oddetall iterasjoner, eksluder Tau (index 1), partall: Ap (index 0)
         par_ind_temp = np.delete(par_ind,ex)
         if (i % U == 0):
@@ -186,12 +186,12 @@ def MHsampler(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,timesteps
         new_log_post = particle_filter(w0est,b2est,theta_next,s1,s2,std,P,binsize,timesteps)
         prob_old,prob_next = scaled2_spike_prob(old_log_post,new_log_post)
         r = ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior,N)
-        print('old theta:', theta_prior)
-        print('new theta:', theta_next)
-        print('r:',r)
+        #print('old theta:', theta_prior)
+        #print('new theta:', theta_next)
+        #print('r:',r)
         choice = np.int(np.random.choice([1,0], 1, p=[min(1,r),1-min(1,r)]))
         theta_choice = [np.copy(theta_prior),np.copy(theta_next)][choice == 1]
-        print('choice:', theta_choice)
+        #print('choice:', theta_choice)
         theta = np.vstack((theta, theta_choice))
         theta_prior = np.copy(theta_choice)
         old_log_post = [np.copy(old_log_post),np.copy(new_log_post)][choice == 1]
@@ -229,6 +229,11 @@ b2est = infer_b2_w0(spk_pre, spk_post, 1e-10)[0]
 w0est = infer_b2_w0(spk_pre[:10000], spk_post[:10000], 1e-10)[1]
 
 Simest1 = MHsampler(w0est, b2est, shapes_prior, rates_prior, spk_pre, spk_post, std, P, binsize, timesteps, U, it,N)
+
+np.save('b1estReal',b1est)
+np.save('b2estReal',b2est)
+np.save('w0estReal',w0est)
+np.save('AltSampleReal0.0001noise',Simest1)
 '''
 ApSim = np.load('ApEstData19113Ind11v6Sim.npy')
 TauSim = np.load('TauEstData19113Ind11v6Sim.npy')

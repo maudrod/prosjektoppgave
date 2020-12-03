@@ -197,11 +197,10 @@ it = 1500
 shapes_prior = np.array([4,5])
 rates_prior = np.array([50,100])
 
-a = np.load('PreNeur_PostNeur_Timesteps(ms).npy') #data19113ind11v6
-spk_pre = a[0][40000:90000]
-spk_post = a[1][40000:90000]
+spk_pre = np.load('Cand1Pre.npy')
+spk_post = np.load('Cand1Post.npy')
 timesteps = len(spk_pre)
-binsize = (a[2][1] - a[2][0]) / 1000
+binsize = 1/1000.0
 
 b1est = infer_b1(spk_pre)
 b2est = infer_b2_w0(spk_pre, spk_post, 1e-10)[0]
@@ -209,6 +208,5 @@ w0est = infer_b2_w0(spk_pre[:10000], spk_post[:10000], 1e-10)[1]
 
 Simest1 = MHsampler(w0est, b2est, shapes_prior, rates_prior, spk_pre, spk_post, std, P, binsize, timesteps, U, it)
 
-np.save('ApEstData19113Ind11v6SimFull',Simest1[:,0])
-np.save('TauEstData19113Ind11v6SimFull',Simest1[:,1])
+np.save('SimSampleReal0.0001noise',Simest1)
 
