@@ -218,18 +218,18 @@ N = [2,3][estimate_noise == True] #number of parameters to estimate
 shapes_prior = [np.array([4,5]),np.array([4,5,5])][estimate_noise == True]
 rates_prior = [np.array([50,100]),np.array([50,100,350])][estimate_noise == True]
 
-a = np.load('PreNeur_PostNeur_Timesteps(ms).npy')
-spk_pre = a[0][40000:90000]
-spk_post = a[1][40000:90000]
+
+spk_pre = np.load('Cand1Pre.npy')
+spk_post = np.load('Cand1Post.npy')
 timesteps = len(spk_pre)
-binsize = (a[2][1] - a[2][0]) / 1000
+binsize = 1/1000.0
 
 b1est = infer_b1(spk_pre)
 b2est = infer_b2_w0(spk_pre, spk_post, 1e-10)[0]
 w0est = infer_b2_w0(spk_pre[:10000], spk_post[:10000], 1e-10)[1]
 
-#Simest1 = MHsampler(w0est, b2est, shapes_prior, rates_prior, spk_pre, spk_post, std, P, binsize, timesteps, U, it,N)
-
+Simest1 = MHsampler(w0est, b2est, shapes_prior, rates_prior, spk_pre, spk_post, std, P, binsize, timesteps, U, it,N)
+'''
 ApSim = np.load('ApEstData19113Ind11v6Sim.npy')
 TauSim = np.load('TauEstData19113Ind11v6Sim.npy')
 ApAlt = np.load('ApEstData19113Ind11v6.npy')
@@ -249,14 +249,13 @@ meanApSim = np.mean(ApSim[500:])
 meanTauSim = np.mean(TauSim)
 meanApAlt = np.mean(ApAlt[500:])
 meanTauAlt = np.mean(TauAlt)
-'''
+
 Traj = np.zeros(timesteps)
 Traj[0] = w0est
 t = np.zeros(timesteps)
 for i in range(1,timesteps):
     Traj[i] = Traj[i-1] + learning_rule(spk_pre,spk_post,mapApSim,mapApSim*1.05,mapTauSim,mapTauSim,t,i,binsize) + np.random.normal(0,std)
     t[i] = binsize*i
-'''
 
 #plot_gen_weight(t, Traj)
 plt.figure()
@@ -275,6 +274,7 @@ plt.title('Tau v $A_+$ - Alternating Proposals - 0.0001 noise')
 plt.legend()
 plt.show()
 '''
+'''
 plt.figure()
 #sns.displot(ApSim,bins=10000)
 #plt.xlim([0.00,0.001])
@@ -290,8 +290,8 @@ plt.title('Tau sampling - Simultaneous Proposals - 0.0001 noise')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
-'''
-'''
+
+
 plt.figure()
 sns.displot(ApAlt[500:],kde = True,bins=100)
 #plt.plot(np.linspace(1,1200,1200),ApAlt,'ko')
