@@ -1,2 +1,8 @@
 SimDiffNoises.py:105: RuntimeWarning: overflow encountered in exp
   return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+Traceback (most recent call last):
+  File "SimDiffNoises.py", line 265, in <module>
+    Altest1 = MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it,N)
+  File "SimDiffNoises.py", line 222, in MHsampler2
+    theta_next = proposal_step(shapes,theta_prior,par_ind_temp)
+TypeError: proposal_step() takes 2 positional arguments but 3 were given
