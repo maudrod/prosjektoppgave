@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import rv_histogram as hist
 
-Datasets1 = np.load('ApInferenceData1to4.npy')
-Datasets2 = np.load('ApInferenceData5to8.npy')
-Datasets3 = np.load('ApInferenceData9to12.npy')
-Datasets4 = np.load('ApInferenceData13to16.npy')
-Datasets5 = np.load('ApInferenceData17to20.npy')
+Datasets1 = np.load('ApInferenceData1to4Opposite.npy')
+Datasets2 = np.load('ApInferenceData5to8Opposite.npy')
+Datasets3 = np.load('ApInferenceData9to12Opposite.npy')
+Datasets4 = np.load('ApInferenceData13to16Opposite.npy')
+Datasets5 = np.load('ApInferenceData17to20Opposite.npy')
 
 Datasets = [Datasets1,Datasets2,Datasets3,Datasets4,Datasets5]
 

@@ -52,6 +52,10 @@ Maps2 <<- append(Maps2,(which.max(unlist(lapply(x, FUN = dens, Tau4[c(300:1500)]
 
 npySave("Maps1msNotSameData.npy",Maps1)
 npySave("Maps2msNotSameData.npy",Maps2)
+
+test <- npyLoad("test1.npy")
+test2 <-npyLoad("test2.npy")
+ccf(test, test2) 
 ```
 
 
