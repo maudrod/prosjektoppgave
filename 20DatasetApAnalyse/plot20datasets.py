@@ -19,12 +19,12 @@ Datasets5 = np.load('ApInferenceData17to20Opposite.npy')
 Datasets = [Datasets1,Datasets2,Datasets3,Datasets4,Datasets5]
 
 
-'''
-maps1 = np.load("Maps0.0001.npy")
-maps2 = np.load("Maps0.0005.npy")
-maps3 = np.load("Maps0.001.npy")
-maps4 = np.load("Maps0.003.npy")
-maps5 = np.load("Maps0.005.npy")
+
+maps1 = np.load("Maps0.0001Opposite.npy")
+maps2 = np.load("Maps0.0005Opposite.npy")
+maps3 = np.load("Maps0.001Opposite.npy")
+maps4 = np.load("Maps0.003Opposite.npy")
+maps5 = np.load("Maps0.005Opposite.npy")
 ### CALCULATED WITH R
 maps = [maps1,maps2,maps3,maps4,maps5]
 
@@ -112,7 +112,7 @@ plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
             
-  
+'''  
 HistAp1 = np.histogram(Datasets[1][0][0][300:],10000)
 DensAp1= hist(HistAp1)
 
