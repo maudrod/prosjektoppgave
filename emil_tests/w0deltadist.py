@@ -7,6 +7,7 @@ Created on Thu Nov 12 22:32:49 2020
 """
 import numpy as np              
 import matplotlib.pyplot as plt 
+from tqdm import tqdm
 from scipy.stats import gamma
 from scipy.stats import norm
 from numba import njit
@@ -121,7 +122,7 @@ def infer_b2_w0(s1,s2,tol):
         i += 1
     return beta
 
-def particle_filter(w0,b2,Ap,s1,s2,std,P,binsize,seconds,tau):
+def particle_filter(w0,b2,theta,s1,s2,std,P,binsize,seconds,tau):
     '''
     Particle filtering, (doesnt quite work yet, smth with weights vp)
     Possible to speed it up? 
@@ -129,10 +130,8 @@ def particle_filter(w0,b2,Ap,s1,s2,std,P,binsize,seconds,tau):
     '''
     timesteps = np.int(seconds/binsize)
     t = np.zeros(timesteps)
-    wp = np.full(P,np.float(w0))
+    wp = np.full((P,timesteps),np.float(w0))
     vp = np.ones(P)
-    #wp = np.random.normal(w0,w0/100,size = P)
-    #vp = norm.pdf(wp,loc = w0, scale = w0/100)
     log_posterior = 0
     for i in range(1,timesteps):
         v_normalized = normalize(vp)
@@ -141,10 +140,10 @@ def particle_filter(w0,b2,Ap,s1,s2,std,P,binsize,seconds,tau):
             wp = resampling(v_normalized,wp,P)
             vp = np.full(P,1/P)
             v_normalized = normalize(vp)
-        lr = learning_rule(s1,s2,Ap,Ap*1.05,tau,tau,t,i,binsize)
-        ls = likelihood_step(s1[i-1],s2[i],wp[:],b2)  
+        lr = learning_rule(s1,s2,theta,theta*1.05,tau,tau,t,i,binsize)
+        ls = likelihood_step(s1[i-1],s2[i],wp[:,i-1],b2)  
         vp = ls*v_normalized
-        wp = wp + lr + np.random.normal(0,std,size = P)
+        wp[:,i] = wp[:,i-1] + lr + np.random.normal(0,std,size = P)
         log_posterior += np.log(np.sum(vp)/P)
         t[i] = i*binsize
     v_normalized = normalize(vp)
@@ -183,7 +182,7 @@ def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,i
 '''
 PARAMETERS AND RUNNING OF ALGORITHM :
 '''        
-std = 0.0001
+std = 0.001
 w0 = 1.0
 b1 = -2
 b2 = -2
@@ -192,7 +191,7 @@ Am = Ap*1.05
 tau = 20.0e-3
 seconds = 120.0
 binsize = 1/200.0
-P = 1000
+P = 20
 U = 100
 it = 1500
 shapes_prior = 5
@@ -201,28 +200,44 @@ rates_prior = 100
 
 #Tau1 = MHsampler2(w0est, b2est, shapes_prior, rates_prior, s1, s2, std, P, binsize, seconds, U, it, Ap)
 
+#s12,s22,t2,W2 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
+#b1est2 = infer_b1(s12)
+#b2est2 = infer_b2_w0(s12, s22, 1e-10)[0]
+#w0est2 = infer_b2_w0(s12[:2000], s22[:2000], 1e-10)[1]
+#wp,vnorm = particle_filter(1, b2est2, 0.005, s12, s22, std, P, binsize, seconds, 0.02)
+'''
+plt.figure()
+plt.title('Weighted particle trajectories ')
+for i in range(P):
+    if i == P-1:
+        plt.plot(t2,W2,'k',label='True trajectory')
+    plt.plot(t2[:],wp[i,:],alpha=vnorm[i]/max(vnorm))
+plt.xlabel('Time (seconds)')
+plt.ylabel('w')
+plt.legend()
+plt.show()
+'''  
 
-taus2 = [0.005,0.01,0.015,0.017,0.019,0.02,0.021,0.023,0.025,0.03,0.035,0.04,0.045,0.05,0.06,0.07,0.08]
-Aps = [0.001,0.002,0.0025,0.003,0.004,0.0045,0.0048,0.0049,0.005,0.0051,0.0052,0.0055,0.006,0.0065,0.007,0.0075,0.008]
-loglikesTau = []
-wests = []
-loglikesAp = []
-for i in range(200):
+
+noises = [0.00001,0.00004,0.00007,0.0001,0.0002,0.0003,0.0004,0.0005,0.0007,0.001,0.0015,0.002,0.0025,0.003,0.004,0.005,0.006,0.007]
+#Aps = [0.001,0.002,0.0025,0.003,0.004,0.0045,0.0048,0.0049,0.005,0.0051,0.0052,0.0055,0.006,0.0065,0.007,0.0075,0.008]
+loglikesNoise = []
+#wests = []
+#loglikesAp = []
+for i in tqdm(range(100)):
     s12,s22,t2,W2 = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
     b1est2 = infer_b1(s12)
     b2est2 = infer_b2_w0(s12, s22, 1e-10)[0]
     w0est2 = infer_b2_w0(s12[:2000], s22[:2000], 1e-10)[1]
-    wests.append(w0est2)
-    particlelogliks2 = []
+    #wests.append(w0est2)
+    #particlelogliks2 = []
     particlelogliks = []
-    for j in range(len(taus2)):
-        particlelogliks2.append(particle_filter(w0est2,b2est2,Ap,s12,s22,std,P,binsize,seconds,taus2[j]))
-    for k in range(len(Aps)):
-        particlelogliks.append(particle_filter(w0est2,b2est2,Aps[k],s12,s22,std,P,binsize,seconds,tau))
-    loglikesTau.append(particlelogliks2)
-    loglikesAp.append(particlelogliks)
+    for j in range(len(noises)):
+        particlelogliks.append(particle_filter(w0est2,b2est2,Ap,s12,s22,noises[j],P,binsize,seconds,tau))
+    #for k in range(len(Aps)):
+    #    particlelogliks.append(particle_filter(w0est2,b2est2,Aps[k],s12,s22,std,P,binsize,seconds,tau))
+    #loglikesTau.append(particlelogliks2)
+    loglikesNoise.append(particlelogliks)
 
 
-np.save('w0estimates_1prosent_deltainit',wests)
-np.save('Loglikes_Tau_1pr_deltainit',loglikesTau)
-np.save('loglikes_Ap_1pr_deltainit',loglikesAp)
+np.save('NoiseLoglikes',loglikesNoise)

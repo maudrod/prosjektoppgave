@@ -1,0 +1,45 @@
+---
+title: "R"
+author: "Emil Myhre"
+date: "8 12 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cars}
+library(RcppCNPy)
+library(EnvStats)
+
+Tau1 = npyLoad("Tau0.0001noise.npy")
+Tau2 = npyLoad("Tau0.0005noise.npy")
+Tau3 <- npyLoad("Tau0.001noise.npy")
+Tau4 <- npyLoad("Tau0.002noise.npy")
+Tau5 <- npyLoad("Tau0.003noise.npy")
+Tau6 <-npyLoad("Tau0.004noise.npy")
+Tau7 <-npyLoad("Tau0.005noise.npy")
+Maps <- c()
+#y <- lapply(x, FUN = dens, Data1_1)
+#MAP = (which.max(unlist(y)) - 1)*stepsize
+stepsize <- 0.00001
+dens <- function(x,Data=Data1_1){
+  return (demp(x,Data))
+}
+x <- seq(from = 0, to = 0.1, by = stepsize)
+
+
+Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau1[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau2[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau3[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau4[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau5[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau6[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau7[c(300:1500)]))) - 1)*stepsize)
+
+
+npySave("MapsTau5ms.npy",Maps)
+```
+
+

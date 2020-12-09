@@ -10,21 +10,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import rv_histogram as hist
 
-Datasets1 = np.load('ApInferenceData1to4Opposite.npy')
-Datasets2 = np.load('ApInferenceData5to8Opposite.npy')
-Datasets3 = np.load('ApInferenceData9to12Opposite.npy')
-Datasets4 = np.load('ApInferenceData13to16Opposite.npy')
-Datasets5 = np.load('ApInferenceData17to20Opposite.npy')
+Datasets1 = np.load('ApInferenceData1to4.npy')
+Datasets2 = np.load('ApInferenceData5to8.npy')
+Datasets3 = np.load('ApInferenceData9to12.npy')
+Datasets4 = np.load('ApInferenceData13to16.npy')
+Datasets5 = np.load('ApInferenceData17to20.npy')
 
 Datasets = [Datasets1,Datasets2,Datasets3,Datasets4,Datasets5]
 
 
 
-maps1 = np.load("Maps0.0001Opposite.npy")
-maps2 = np.load("Maps0.0005Opposite.npy")
-maps3 = np.load("Maps0.001Opposite.npy")
-maps4 = np.load("Maps0.003Opposite.npy")
-maps5 = np.load("Maps0.005Opposite.npy")
+maps1 = np.load("Maps0.0001.npy")
+maps2 = np.load("Maps0.0005.npy")
+maps3 = np.load("Maps0.001.npy")
+maps4 = np.load("Maps0.003.npy")
+maps5 = np.load("Maps0.005.npy")
 ### CALCULATED WITH R
 maps = [maps1,maps2,maps3,maps4,maps5]
 
@@ -71,10 +71,10 @@ plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
     if i == 1:
-        plt.errorbar(x[i], means[i], yerr = meansvar[i],c='c',marker = 'o',label='Std of means',ecolor='c')
+        plt.errorbar(x[i], means[i], yerr = meansvar[i],c=[0.4,0.3,0.9],marker = 'o',label='Std of means',ecolor=[0.4,0.3,0.9])
         #plt.errorbar(x[i], means[i], yerr = varrs[i],marker = 'o',label='Std of samples',barsabove=(True))
     else:
-        plt.errorbar(x[i], means[i], yerr = meansvar[i],c='c',marker = 'o',ecolor='c')#,label='Std of means')
+        plt.errorbar(x[i], means[i], yerr = meansvar[i],c=[0.4,0.3,0.9],marker = 'o',ecolor=[0.4,0.3,0.9])#,label='Std of means')
         #plt.errorbar(x[i], means[i], yerr = varrs[i],marker = 'o')#,label='Std of samples')
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
@@ -89,9 +89,9 @@ plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
     if i == 1:
-        plt.errorbar(x[i], maps[i], yerr = mapsvar[i],c='c',marker = 'o',label='Std of MAPs',ecolor='c')
+        plt.errorbar(x[i], maps[i], yerr = mapsvar[i],c=[0.4,0.3,0.9],marker = 'o',label='Std of MAPs',ecolor=[0.4,0.3,0.9])
     else:
-        plt.errorbar(x[i], maps[i], yerr = mapsvar[i],c='c',marker = 'o',ecolor='c')
+        plt.errorbar(x[i], maps[i], yerr = mapsvar[i],c=[0.4,0.3,0.9],marker = 'o',ecolor=[0.4,0.3,0.9])
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
@@ -105,9 +105,9 @@ plt.xlim([0,6])
 plt.xticks(x,labels = ticksss)
 for i in range(5):
     if i == 1:
-        plt.errorbar(x[i], medians[i], yerr = mediansvar[i],c='c',marker = 'o',label='Std of medians',ecolor='c')
+        plt.errorbar(x[i], medians[i], yerr = mediansvar[i],c=[0.4,0.3,0.9],marker = 'o',label='Std of medians',ecolor=[0.4,0.3,0.9])
     else:
-        plt.errorbar(x[i], medians[i],c='c', yerr = mediansvar[i],marker = 'o',ecolor='c')
+        plt.errorbar(x[i], medians[i],c=[0.4,0.3,0.9], yerr = mediansvar[i],marker = 'o',ecolor=[0.4,0.3,0.9])
 plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()

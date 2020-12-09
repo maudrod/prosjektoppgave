@@ -68,9 +68,11 @@ plt.title('Posterior distribution Ap - 0.005 noise')
 plt.show()
 '''
 
-'''
-Tau analysis
 
+#Tau analysis
+
+x = [1,2,3,4,5,6,7]
+ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
 
 Tau1 = np.load('Tau0.0001noise.npy')
 Tau2 = np.load('Tau0.0005noise.npy')
@@ -96,25 +98,24 @@ Taumean7 = np.mean(Tau7[300:])
 Tauvar7 = np.var(Tau7[300:])
 
 Taumeans = [Taumean1,Taumean2,Taumean3,Taumean4,Taumean5,Taumean6,Taumean7]
+Taumaps = np.load('MapsTau5ms.npy')
 Taustds = [np.sqrt(Tauvar1),np.sqrt(Tauvar2),np.sqrt(Tauvar3),np.sqrt(Tauvar4),np.sqrt(Tauvar5),np.sqrt(Tauvar6),np.sqrt(Tauvar7)]
-'''
-'''
+
 plt.figure()
-plt.title('Sensitivity of noise')
+plt.title(r'Sensitivity of noise ')
 plt.xlabel('Noise')
 plt.ylabel('Tau estimation')
 plt.ylim([-0.06,0.1])
 plt.xlim([0,8])
 plt.xticks(x,labels = ticksss)
 for i in range(7):
-    plt.errorbar(x[i], Taumeans[i], yerr = Taustds[i],marker = 'o')
+    plt.errorbar(x[i], Taumaps[i], yerr = Taustds[i],marker = 'o')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
-'''
+
 plt.figure()
-sns.displot(Tau1[300:], kde=True)
+sns.displot(Tau1[300:], kde=True,bins=100)
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.title('Posterior distribution Tau - 0.0001 noise')
@@ -129,11 +130,11 @@ plt.plot(np.linspace(1,1500,1500),Tau1,'ko')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
+
 '''
 Simultaneous
 '''
-
+'''
 Sim1 = np.load('Sim0.0001noise.npy')
 Sim2 = np.load('Sim0.0005noise.npy')
 Sim3 = np.load('Sim0.001noise.npy')
@@ -192,7 +193,7 @@ plt.title('Posterior distribution $A_+$ - $\sigma = 0.0002$')
 plt.legend()
 plt.show()
 
-'''
+
 plt.figure()
 plt.title('Sensitivity of noise - Tau')
 plt.xlabel('Noise')
