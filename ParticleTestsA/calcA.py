@@ -197,7 +197,7 @@ Am = Ap*1.05
 tau = 20.0e-3
 seconds = 120.0
 binsize = 1/200.0
-P = 5000 # particles
+P = 500 # particles
 U = 100
 it = 1500
 
