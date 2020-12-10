@@ -180,6 +180,12 @@ def MHsampler(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,it
 
 ### ALSO DO ALT ###
 
+def proposal_step2(shapes,theta,par_ind):
+    theta_new = np.copy(theta)
+    for i in par_ind:
+        theta_new[i] = np.random.gamma(shapes[i],theta[i]/shapes[i])
+    return theta_new
+
 def adjust_variance2(theta, U, par_ind,N,it,shapes):
     mean = np.zeros(N)
     var_new = np.zeros(N)
@@ -219,10 +225,10 @@ def MHsampler2(w0est,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,
         if (i % U == 0):
             shapes, theta_next = adjust_variance2(theta,U,par_ind_temp,N,it,shapes)
         else:    
-            theta_next = proposal_step(shapes,theta_prior,par_ind_temp)
+            theta_next = proposal_step2(shapes,theta_prior,par_ind_temp)
         new_log_post = particle_filter(w0est,b2est,theta_next,s1,s2,std,P,binsize,seconds)
         prob_old,prob_next = scaled2_spike_prob(old_log_post,new_log_post)
-        r = ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior,N)
+        r = ratio(prob_old,prob_next,shapes_prior,rates_prior,shapes,theta_next,theta_prior)
         #print('old theta:', theta_prior)
         #print('new theta:', theta_next)
         #print('r:',r)

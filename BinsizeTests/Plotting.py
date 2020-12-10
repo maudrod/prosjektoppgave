@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-'''
+
 
 Taus = np.load('Taus.npy')
 w0ests2ms = np.load('w0estimates_2ms.npy')
@@ -82,7 +82,7 @@ Tau1mslows = []
 
 for i in range(len(w0lows1ms[0])):
     Tau1mslows.append(loglikesTau1ms[w0lows1ms[0][i].astype(int)])
-'''
+
 '''
 plt.figure()
 plt.title('Tau loglikelihood - Good estimate w0 - 2ms')
@@ -358,3 +358,32 @@ plt.legend()
 plt.show()
 '''
 
+scaled = np.copy(Tau5msgoods)
+for i in range(len(scaled)):
+    scaled[i,:] = (np.asarray(Tau5msgoods)[i,:] / abs(min(np.asarray(Tau5msgoods)[i,:])))
+#ll2ms = loglikesTau2ms.flatten()
+
+ll2msG = np.asarray(scaled).flatten()
+
+
+ll2msG = ll2msG - max(ll2msG)
+
+Tauss = np.zeros(len(ll2msG))
+count = 0
+for i in range(len(Tauss)):
+    Tauss[i] = Taus[count]
+    if count == 16:
+        count = 0
+    else:
+        count += 1
+
+data = np.transpose(np.asarray([ll2msG,Tauss]))
+
+df = pd.DataFrame(data, columns =[r'log$P(s_2^{(0:T)}$ given $\tau)$', 'Tau'])
+
+plt.figure()
+plt.title('Scaled loglikelihood -  good $w^0$ estimations')
+sns.lineplot(data=df, x="Tau", y=r"log$P(s_2^{(0:T)}$ given $\tau)$",label='Mean and 95% CI')
+plt.axvline(0.02,color='r',linestyle='--',label='True Value')
+plt.legend(loc = 4)
+plt.show()

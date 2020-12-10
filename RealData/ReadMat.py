@@ -9,7 +9,7 @@ import numpy as np
 from mat4py import loadmat
 import matplotlib.pyplot as plt
 import scipy.stats as stats
-
+plt.style.use('seaborn-darkgrid')
 #data = loadmat('shortTermPlasticity1.mat')
 '''
 data18102 = loadmat('camkii10_180102.spikes.cellinfo.mat')
@@ -51,12 +51,12 @@ data19115 = loadmat('camkii13_190115.spikes.cellinfo.mat')
 #st2 = st2.astype(int)
 
 #data19109 = loadmat('camkii13_190109.spikes.cellinfo.mat')
-st1 = np.concatenate(data19109['spikes']['times'][0])
-st2 = np.concatenate(data19109['spikes']['times'][4])
-st3 = np.concatenate(data19109['spikes']['times'][12])
-st4 = np.concatenate(data19109['spikes']['times'][14])
-st5 = np.concatenate(data19109['spikes']['times'][16])
-st6 = np.concatenate(data19109['spikes']['times'][19])
+#st1 = np.concatenate(data19109['spikes']['times'][0])
+#st2 = np.concatenate(data19109['spikes']['times'][4])
+#st3 = np.concatenate(data19109['spikes']['times'][12])
+#st4 = np.concatenate(data19109['spikes']['times'][14])
+#st5 = np.concatenate(data19109['spikes']['times'][16])
+#st6 = np.concatenate(data19109['spikes']['times'][19])
 
 
 #st1 = np.concatenate(data19110['spikes']['times'][3]).round(1)
@@ -98,13 +98,20 @@ st6 = np.concatenate(data19109['spikes']['times'][19])
 
 #st5 = st5.round()
 #st9 = st9.round()
+data18231 = loadmat('camkii13_181231.spikes.cellinfo.mat')
 
 st2 = np.concatenate(data18231['spikes']['times'][8])
 st5 = np.concatenate(data18231['spikes']['times'][10])
+st1 = np.concatenate(data18231['spikes']['times'][1])
+st3 = np.concatenate(data18231['spikes']['times'][9])
+st4 = np.concatenate(data18231['spikes']['times'][0])
+st6 = np.concatenate(data18231['spikes']['times'][23])
 
 st2pos = st2[(np.where((st2 > 3900) & (st2 < 4035)))]
 
 st5pos = st5[(np.where((st5 > 3900) & (st5 < 4035)))]
+
+
 
 st2pos = st2pos*1000
 
@@ -157,15 +164,56 @@ lags = np.linspace(-maxlag,maxlag,2*maxlag+1)
 ci = cicc(lags,0.99,len(s1))
 
 plt.figure()
-plt.title('Cross-correlation factors for a neuron pair')
+plt.title('Cross-correlation for the first 10 seconds')
 plt.xcorr(s1 - s1.mean(), s2 - s2.mean(),maxlags=10,normed=True)
 plt.plot(lags,ci[1],'r--',label='99% CI under $H_0$')
 plt.plot(lags,ci[0],'r--')#,label='99% CI under $H_0$')
+plt.ylim((-0.035,0.035))
 #plt.xticks(x,labels = ms)
 plt.xlabel('Timelag (ms)')
-plt.legend()
+plt.legend(loc=1,fancybox = True)
 plt.show()
 
+'''
+startsec = 3880
+endsec = 4050
+spiketrains = [st1[(np.where((st1 > startsec) & (st1 < endsec)))],st2[(np.where((st2 > startsec) & (st2 < endsec)))]\
+               ,st3[(np.where((st3 > startsec) & (st3 < endsec)))],st4[(np.where((st4 > startsec) & (st4 < endsec)))]\
+                   ,st5[(np.where((st5 > startsec) & (st5 < endsec)))],st6[(np.where((st6 > startsec) & (st6 < endsec)))]]
+lineSize = [0.4, 0.4, 0.4, 0.4, 0.4,0.4]
+
+spiketrain_halfs = []
+for i in range(len(spiketrains)):
+    temp = np.zeros(int(len(spiketrains[i])/4)+1)
+    for j in range(len(spiketrains[i])):
+        if j%4 == 0:
+            temp[int(j/4)] = spiketrains[i][j]
+    spiketrain_halfs.append(temp)
+    
+    
+colorCodes = np.array([[0.3, 0.3, 0.4],
+
+                        [0, 0, 1],
+
+                       [0.3, 0.3, 0.4],
+
+                        [0.3, 0.3, 0.4],
+
+                        [0, 0, 1],
+
+                        [0.3, 0.3, 0.4]])
+plt.figure()
+plt.title('Spike Trains of selected neurons')
+plt.xlabel('Time (seconds)')
+plt.xlim([startsec,endsec])
+plt.ylim([-0.5,5.9])
+plt.ylabel('Neuron')
+plt.eventplot(spiketrain_halfs,linelengths=lineSize,colors= colorCodes)
+plt.axvline(3914,color='g',linestyle='--',alpha=0.8)
+plt.axvline(4034,color='g',linestyle='--',alpha=0.8,label='Possible stimulation time')
+plt.legend(loc=('upper center'))
+plt.show()
+'''
 '''
 for i in range(4000,6000,100):
     startsec = i
