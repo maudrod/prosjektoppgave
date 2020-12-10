@@ -102,7 +102,7 @@ Taumaps = np.load('MapsTau5ms.npy')
 Taustds = [np.sqrt(Tauvar1),np.sqrt(Tauvar2),np.sqrt(Tauvar3),np.sqrt(Tauvar4),np.sqrt(Tauvar5),np.sqrt(Tauvar6),np.sqrt(Tauvar7)]
 
 plt.figure()
-plt.title(r'Sensitivity of noise ')
+plt.title(r'Sensitivity of noise - Binsize: 5ms ')
 plt.xlabel('Noise')
 plt.ylabel('Tau estimation')
 plt.ylim([-0.06,0.1])

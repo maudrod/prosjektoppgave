@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from tqdm import tqdm
 from scipy.stats import gamma
+from numba import njit
+@njit
 
 def learning_rule(s1,s2,Ap,Am,taup,taum,t,i): 
     '''
@@ -11,6 +13,16 @@ def learning_rule(s1,s2,Ap,Am,taup,taum,t,i):
     Ap,Am,taup,taum : learning rule parameters 
     '''
     return s2[i-1]*np.sum(s1[:i]*Ap*np.exp((t[:i]-max(t))/taup)) - s1[i-1]*np.sum(s2[:i]*Am*np.exp((t[:i]-max(t))/taum))
+
+def learning_rule2(s1,s2,Ap,Am,taup,taum,t,i,binsize): 
+    '''
+    5.8 in article (typo in article, should be negative exponent for e)
+    s1,s2 : binary values for the different time bins for neuron 1 and 2 respectively
+    t : numpy array with the measured time points
+    Ap,Am,taup,taum : learning rule parameters 
+    '''
+    l = i - np.int(np.ceil(10*taup / binsize))
+    return s2[i-1]*np.sum(s1[max([l,0]):i]*Ap*np.exp((t[max([l,0]):i]-max(t))/taup)) - s1[i-1]*np.sum(s2[max([l,0]):i]*Am*np.exp((t[max([l,0]):i]-max(t))/taum))
 
 def logit(x):
     return np.log(x/(1-x))
@@ -24,8 +36,22 @@ def generative(Ap,Am,taup,taum,b1,b2,w0,std,time,binsize):
     t,W,s1,s2 = np.zeros(iterations),np.zeros(iterations),np.zeros(iterations),np.zeros(iterations)
     W[0] = w0 #Initial value for weights
     s1[0] = np.random.binomial(1,inverse_logit(b1)) #5.4 in article, generate spike/not for neuron 1
-    for i in tqdm(range(1,iterations)):
+    for i in range(1,iterations):
         lr = learning_rule(s1,s2,Ap,Am,taup,taum,t,i)
+        W[i] = W[i-1] + lr + np.random.normal(0,std) #updating weights, as in 5.8 in article
+        s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+b2)) #5.5 in article, spike/not neuron 2
+        s1[i] = np.random.binomial(1,inverse_logit(b1)) #5.4
+        t[i] = binsize*i #list with times (start time of current bin)
+    return(s1,s2,t,W)
+
+def generative2(Ap,Am,taup,taum,b1,b2,w0,std,time,binsize):
+    '''time and binsize measured in seconds'''
+    iterations = np.int(time/binsize)
+    t,W,s1,s2 = np.zeros(iterations),np.zeros(iterations),np.zeros(iterations),np.zeros(iterations)
+    W[0] = w0 #Initial value for weights
+    s1[0] = np.random.binomial(1,inverse_logit(b1)) #5.4 in article, generate spike/not for neuron 1
+    for i in range(1,iterations):
+        lr = learning_rule2(s1,s2,Ap,Am,taup,taum,t,i,binsize)
         W[i] = W[i-1] + lr + np.random.normal(0,std) #updating weights, as in 5.8 in article
         s2[i] = np.random.binomial(1,inverse_logit(W[i]*s1[i-1]+b2)) #5.5 in article, spike/not neuron 2
         s1[i] = np.random.binomial(1,inverse_logit(b1)) #5.4
@@ -162,7 +188,7 @@ def MHsampler(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,time,U,it):
 '''
 PARAMETERS AND RUNNING OF ALGORITHM :
 '''        
-std = 0.001
+std = 0.0005
 w0 = 1
 b1 = -2
 b2 = -2
@@ -176,3 +202,26 @@ U = 100
 it = 1500
 shapes_prior = [1,1]
 rates_prior = [50,100]
+'''
+trajsLr = []
+trajsLrm = []
+for i in tqdm(range(20)):
+    trajsLr.append(generative(Ap, Am, tau, tau, b1, b2, w0, std, time, binsize)[3])
+    trajsLrm.append(generative2(Ap, Am, tau, tau, b1, b2, w0, std, time, binsize)[3])
+'''
+
+plt.figure()
+plt.title('20 simulated weight trajectories')
+plt.xlabel('Time (seconds)')
+plt.ylabel('w')
+for i in range(20):
+    plt.plot(np.linspace(0,23999,24000),trajsLr[i], c='g')
+    plt.plot(np.linspace(0,23999,24000),trajsLrm[i], c='b')
+    if i == 2:
+        plt.plot(np.linspace(0,23999,24000),trajsLr[i],label='Learning rule (lr)', c='g')
+        plt.plot(np.linspace(0,23999,24000),trajsLrm[i],label='Modified learning rule (mlr)', c='b')
+    if i == 19:
+        plt.plot(np.linspace(0,23999,24000),trajsLrmean,label='Average lr', c='k')
+        plt.plot(np.linspace(0,23999,24000),trajsLrmmean,label='Average mlr', c='r')
+plt.legend()
+plt.show()

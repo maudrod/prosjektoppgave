@@ -10,8 +10,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-
+'''
 Taus = np.load('Taus.npy')
+
 w0ests2ms = np.load('w0estimates_2ms.npy')
 w0ests5ms = np.load('w0estimates_5ms.npy')
 w0ests1ms = np.load('w0estimates_2ms.npy')
@@ -82,7 +83,7 @@ Tau1mslows = []
 
 for i in range(len(w0lows1ms[0])):
     Tau1mslows.append(loglikesTau1ms[w0lows1ms[0][i].astype(int)])
-
+'''
 '''
 plt.figure()
 plt.title('Tau loglikelihood - Good estimate w0 - 2ms')
@@ -167,17 +168,20 @@ plt.legend()
 plt.show()
 '''
 ##### 2MS TAU INFERENCE ######
-'''
-Tau1 = np.load('Tau0.0001noise2msB275.npy')
-Tau2 = np.load('Tau0.001noise2msB275.npy')
-Tau3 = np.load('Tau0.003noise2msB275.npy')
-Tau4 = np.load('Tau0.005noise2msB275.npy')
+
+Tau1 = np.load('Tau0.0001noise2msB275same.npy')
+Tau2 = np.load('Tau0.001noise2msB275same.npy')
+Tau3 = np.load('Tau0.003noise2msB275same.npy')
+Tau4 = np.load('Tau0.005noise2msB275same.npy')
 
 
-Tau5 = np.load('Tau0.0001noise2msB31.npy')
-Tau6 = np.load('Tau0.001noise2msB31.npy')
-Tau7 = np.load('Tau0.003noise2msB31.npy')
-Tau8 = np.load('Tau0.005noise2msB31.npy')
+Tau5 = np.load('Tau0.0001noise1msB35same.npy')
+Tau6 = np.load('Tau0.001noise1msB35same.npy')
+Tau7 = np.load('Tau0.003noise1msB35same.npy')
+Tau8 = np.load('Tau0.005noise1msB35same.npy')
+
+Maps2ms = np.load('Maps2msSameData.npy')
+Maps1ms = np.load('Maps1msSameData.npy')
 
 Taumean1 = np.mean(Tau1[300:])
 Tauvar1 = np.var(Tau1[300:])
@@ -200,24 +204,24 @@ Tauvar8 = np.var(Tau7[300:])
 
 Taumeans275 = [Taumean1,Taumean2,Taumean3,Taumean4]
 Taumeans31 = [Taumean5,Taumean6,Taumean7,Taumean8]
-Taustds275 = [np.sqrt(Tauvar1),np.sqrt(Tauvar2),np.sqrt(Tauvar3),np.sqrt(Tauvar4)] 
-Taustds31 = [np.sqrt(Tauvar5),np.sqrt(Tauvar6),np.sqrt(Tauvar7),np.sqrt(Tauvar8)]
+Taustds2ms = [np.sqrt(Tauvar1),np.sqrt(Tauvar2),np.sqrt(Tauvar3),np.sqrt(Tauvar4)] 
+Taustds1ms = [np.sqrt(Tauvar5),np.sqrt(Tauvar6),np.sqrt(Tauvar7),np.sqrt(Tauvar8)]
 
 x = [1,2,3,4]
 ticksss = ['0.0001','0.001','0.003','0.005']
 plt.figure()
-plt.title('Tau sensitivity of noise - 2ms - $b_1 = b_2$ = -3.1')
+plt.title('Sensitivity of noise - Binsize: 1ms')
 plt.xlabel('Noise')
 plt.ylabel('Tau estimation')
 plt.ylim([-0.06,0.1])
 plt.xlim([0,5])
 plt.xticks(x,labels = ticksss)
 for i in range(4):
-    plt.errorbar(x[i], Taumeans31[i], yerr = Taustds31[i],marker = 'o')
+    plt.errorbar(x[i], Maps1ms[i], yerr = Taustds1ms[i],marker = 'o')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-'''
+
 '''
 plt.figure()
 plt.title('Loglikelihoods good $w^0$ estimation - 1ms binsize ')
@@ -357,7 +361,7 @@ plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
-
+'''
 scaled = np.copy(Tau5msgoods)
 for i in range(len(scaled)):
     scaled[i,:] = (np.asarray(Tau5msgoods)[i,:] / abs(min(np.asarray(Tau5msgoods)[i,:])))
@@ -387,3 +391,4 @@ sns.lineplot(data=df, x="Tau", y=r"log$P(s_2^{(0:T)}$ given $\tau)$",label='Mean
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend(loc = 4)
 plt.show()
+'''

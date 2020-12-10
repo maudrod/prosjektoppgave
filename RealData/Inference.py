@@ -243,8 +243,10 @@ binsize = 1/1000.0
 AltReal = np.load('AltSampleReal0.0001noise.npy')
 SimReal = np.load('SimSampleReal0.0001noise.npy')
 w0est = np.load('w0estReal.npy')
+b1 = np.load('b1estReal.npy')
+b2 = np.load('b2estReal.npy')
 
-
+'''
 medApSim = np.median(SimReal[300:,0])
 medTauSim = np.median(SimReal[300:,1])
 medApAlt = np.median(AltReal[300:,0])
@@ -259,14 +261,14 @@ meanApSim = np.mean(SimReal[300:,0])
 meanTauSim = np.mean(SimReal[300:,1])
 meanApAlt = np.mean(AltReal[300:,0])
 meanTauAlt = np.mean(AltReal[300:,1])
-'''
+
 Traj = np.zeros(timesteps)
 Traj[0] = w0est
 t = np.zeros(timesteps)
 for i in range(1,timesteps):
     Traj[i] = Traj[i-1] + learning_rule(spk_pre,spk_post,mapApSim,mapApSim*1.05,mapTauSim,mapTauSim,t,i,binsize) + np.random.normal(0,std)
     t[i] = binsize*i
-'''
+
 
 sns.set_style("darkgrid")
 
@@ -298,7 +300,7 @@ plt.title(r'Posterior distribution $A_+$ - Simultaneous Proposals')
 plt.legend()
 plt.show()
 
-'''
+
 AmMapAlt = mapApAlt[0] * 1.05
 
 def lr1(s2,s1,Ap,delta,taup):

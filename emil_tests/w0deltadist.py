@@ -182,7 +182,7 @@ def MHsampler2(w0,b2est,shapes_prior,rates_prior,s1,s2,std,P,binsize,seconds,U,i
 '''
 PARAMETERS AND RUNNING OF ALGORITHM :
 '''        
-std = 0.001
+std = 0.003
 w0 = 1.0
 b1 = -2
 b2 = -2
@@ -218,7 +218,7 @@ plt.legend()
 plt.show()
 '''  
 
-
+'''
 noises = [0.00001,0.00004,0.00007,0.0001,0.0002,0.0003,0.0004,0.0005,0.0007,0.001,0.0015,0.002,0.0025,0.003,0.004,0.005,0.006,0.007]
 #Aps = [0.001,0.002,0.0025,0.003,0.004,0.0045,0.0048,0.0049,0.005,0.0051,0.0052,0.0055,0.006,0.0065,0.007,0.0075,0.008]
 loglikesNoise = []
@@ -240,4 +240,36 @@ for i in tqdm(range(100)):
     loglikesNoise.append(particlelogliks)
 
 
-np.save('NoiseLoglikes',loglikesNoise)
+np.save('NoiseLoglikes0.003',loglikesNoise)
+'''
+
+scaled = np.copy(loglikesNoise)
+for i in range(len(scaled)):
+    scaled[i,:] = (np.asarray(loglikesNoise)[i,:] / abs(min(np.asarray(loglikesNoise)[i,:])))
+
+#ll2ms = loglikesNoise.flatten()
+
+ll2ms = np.asarray(scaled).flatten()
+
+
+#ll2msG = ll2msG - max(ll2msG)
+
+noisess = np.zeros(len(ll2ms))
+count = 0
+for i in range(len(noisess)):
+    noisess[i] = noises[count]
+    if count == (len(noises)-1):
+        count = 0
+    else:
+        count += 1
+
+data = np.transpose(np.asarray([ll2ms,noisess]))
+
+df = pd.DataFrame(data, columns =[r'log$P(s_2^{(0:T)}$ given $\sigma)$', '$\sigma$'])
+
+plt.figure()
+plt.title(r'Scaled loglikelihood $\sigma$')
+sns.lineplot(data=df, x='$\sigma$', y=r'log$P(s_2^{(0:T)}$ given $\sigma)$',label='Mean and 95% CI')
+plt.axvline(0.003,color='r',linestyle='--',label='True Value: 0.003')
+plt.legend(loc = 4)
+plt.show()
