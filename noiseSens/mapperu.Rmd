@@ -30,16 +30,78 @@ dens <- function(x,Data=Data1_1){
 x <- seq(from = 0, to = 0.1, by = stepsize)
 
 
-Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau1[c(300:1500)]))) - 1)*stepsize)
-Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau2[c(300:1500)]))) - 1)*stepsize)
-Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau3[c(300:1500)]))) - 1)*stepsize)
-Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau4[c(300:1500)]))) - 1)*stepsize)
-Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau5[c(300:1500)]))) - 1)*stepsize)
-Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau6[c(300:1500)]))) - 1)*stepsize)
-Maps <<- append(Maps1,(which.max(unlist(lapply(x, FUN = dens, Tau7[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps,(which.max(unlist(lapply(x, FUN = dens, Tau1[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps,(which.max(unlist(lapply(x, FUN = dens, Tau2[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps,(which.max(unlist(lapply(x, FUN = dens, Tau3[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps,(which.max(unlist(lapply(x, FUN = dens, Tau4[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps,(which.max(unlist(lapply(x, FUN = dens, Tau5[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps,(which.max(unlist(lapply(x, FUN = dens, Tau6[c(300:1500)]))) - 1)*stepsize)
+Maps <<- append(Maps,(which.max(unlist(lapply(x, FUN = dens, Tau7[c(300:1500)]))) - 1)*stepsize)
 
 
 npySave("MapsTau5ms.npy",Maps)
 ```
 
+```{r AltVSim}
+Alt1Same = npyLoad('Alt0.0001noiseSame.npy')
+Alt2Same = npyLoad('Alt0.0005noiseSame.npy')
+Alt3Same = npyLoad('Alt0.001noiseSame.npy')
+Alt4Same = npyLoad('Alt0.002noiseSame.npy')
+Alt5Same = npyLoad('Alt0.003noiseSame.npy')
+Alt6Same = npyLoad('Alt0.004noiseSame.npy')
+Alt7Same = npyLoad('Alt0.005noiseSame.npy')
+
+Sim1Same = npyLoad('Sim0.0001noiseSame.npy')
+Sim2Same = npyLoad('Sim0.0005noiseSame.npy')
+Sim3Same = npyLoad('Sim0.001noiseSame.npy')
+Sim4Same = npyLoad('Sim0.002noiseSame.npy')
+Sim5Same = npyLoad('Sim0.003noiseSame.npy')
+Sim6Same = npyLoad('Sim0.004noiseSame.npy')
+Sim7Same = npyLoad('Sim0.005noiseSame.npy')
+
+MapsASim <- c()
+MapsTauSim <- c()
+MapsAAlt <- c()
+MapsTauAlt <- c()
+#y <- lapply(x, FUN = dens, Data1_1)
+#MAP = (which.max(unlist(y)) - 1)*stepsize
+stepsize <- 0.00001
+dens <- function(x,Data=Data1_1){
+  return (demp(x,Data))
+}
+x <- seq(from = 0, to = 0.1, by = stepsize)
+
+
+MapsASim <<- append(MapsASim,(which.max(unlist(lapply(x, FUN = dens, Sim1Same[c(300:1500),1]))) - 1)*stepsize)
+MapsASim <<- append(MapsASim,(which.max(unlist(lapply(x, FUN = dens, Sim2Same[c(300:1500),1]))) - 1)*stepsize)
+MapsASim <<- append(MapsASim,(which.max(unlist(lapply(x, FUN = dens, Sim3Same[c(300:1500),1]))) - 1)*stepsize)
+MapsASim <<- append(MapsASim,(which.max(unlist(lapply(x, FUN = dens, Sim4Same[c(300:1500),1]))) - 1)*stepsize)
+MapsASim <<- append(MapsASim,(which.max(unlist(lapply(x, FUN = dens, Sim5Same[c(300:1500),1]))) - 1)*stepsize)
+MapsASim <<- append(MapsASim,(which.max(unlist(lapply(x, FUN = dens, Sim6Same[c(300:1500),1]))) - 1)*stepsize)
+MapsASim <<- append(MapsASim,(which.max(unlist(lapply(x, FUN = dens, Sim7Same[c(300:1500),1]))) - 1)*stepsize)
+
+MapsAAlt <<- append(MapsAAlt,(which.max(unlist(lapply(x, FUN = dens, Alt1Same[c(300:1500),1]))) - 1)*stepsize)
+MapsAAlt <<- append(MapsAAlt,(which.max(unlist(lapply(x, FUN = dens, Alt2Same[c(300:1500),1]))) - 1)*stepsize)
+MapsAAlt <<- append(MapsAAlt,(which.max(unlist(lapply(x, FUN = dens, Alt3Same[c(300:1500),1]))) - 1)*stepsize)
+MapsAAlt <<- append(MapsAAlt,(which.max(unlist(lapply(x, FUN = dens, Alt4Same[c(300:1500),1]))) - 1)*stepsize)
+MapsAAlt <<- append(MapsAAlt,(which.max(unlist(lapply(x, FUN = dens, Alt5Same[c(300:1500),1]))) - 1)*stepsize)
+MapsAAlt <<- append(MapsAAlt,(which.max(unlist(lapply(x, FUN = dens, Alt6Same[c(300:1500),1]))) - 1)*stepsize)
+MapsAAlt <<- append(MapsAAlt,(which.max(unlist(lapply(x, FUN = dens, Alt7Same[c(300:1500),1]))) - 1)*stepsize)
+
+MapsTauSim <<- append(MapsTauSim,(which.max(unlist(lapply(x, FUN = dens, Sim1Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauSim <<- append(MapsTauSim,(which.max(unlist(lapply(x, FUN = dens, Sim2Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauSim <<- append(MapsTauSim,(which.max(unlist(lapply(x, FUN = dens, Sim3Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauSim <<- append(MapsTauSim,(which.max(unlist(lapply(x, FUN = dens, Sim4Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauSim <<- append(MapsTauSim,(which.max(unlist(lapply(x, FUN = dens, Sim5Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauSim <<- append(MapsTauSim,(which.max(unlist(lapply(x, FUN = dens, Sim6Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauSim <<- append(MapsTauSim,(which.max(unlist(lapply(x, FUN = dens, Sim7Same[c(300:1500),2]))) - 1)*stepsize)
+
+MapsTauAlt <<- append(MapsTauAlt,(which.max(unlist(lapply(x, FUN = dens, Alt1Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauAlt <<- append(MapsTauAlt,(which.max(unlist(lapply(x, FUN = dens, Alt2Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauAlt <<- append(MapsTauAlt,(which.max(unlist(lapply(x, FUN = dens, Alt3Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauAlt <<- append(MapsTauAlt,(which.max(unlist(lapply(x, FUN = dens, Alt4Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauAlt <<- append(MapsTauAlt,(which.max(unlist(lapply(x, FUN = dens, Alt5Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauAlt <<- append(MapsTauAlt,(which.max(unlist(lapply(x, FUN = dens, Alt6Same[c(300:1500),2]))) - 1)*stepsize)
+MapsTauAlt <<- append(MapsTauAlt,(which.max(unlist(lapply(x, FUN = dens, Alt7Same[c(300:1500),2]))) - 1)*stepsize)
+```
 

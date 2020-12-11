@@ -70,7 +70,7 @@ plt.show()
 
 
 #Tau analysis
-
+'''
 x = [1,2,3,4,5,6,7]
 ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
 
@@ -130,7 +130,7 @@ plt.plot(np.linspace(1,1500,1500),Tau1,'ko')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
+'''
 '''
 Simultaneous
 '''
@@ -358,24 +358,39 @@ plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
-'''
+
 #AltVsim SAMME DATASETT
 
-Alt1Same = np.load('Alt0.0001noiseSame')
-Alt2Same = np.load('Alt0.0005noiseSame')
-Alt3Same = np.load('Alt0.001noiseSame')
-Alt4Same = np.load('Alt0.002noiseSame')
-Alt5Same = np.load('Alt0.003noiseSame')
-Alt6Same = np.load('Alt0.004noiseSame')
-Alt7Same = np.load('Alt0.005noiseSame')
+Alt1Same = np.load('Alt0.0001noiseSame.npy')
+Alt2Same = np.load('Alt0.0005noiseSame.npy')
+Alt3Same = np.load('Alt0.001noiseSame.npy')
+Alt4Same = np.load('Alt0.002noiseSame.npy')
+Alt5Same = np.load('Alt0.003noiseSame.npy')
+Alt6Same = np.load('Alt0.004noiseSame.npy')
+Alt7Same = np.load('Alt0.005noiseSame.npy')
 
-Sim1Same = np.load('Sim0.0001noiseSame')
-Sim2Same = np.load('Sim0.0005noiseSame')
-Sim3Same = np.load('Sim0.001noiseSame')
-Sim4Same = np.load('Sim0.002noiseSame')
-Sim5Same = np.load('Sim0.003noiseSame')
-Sim6Same = np.load('Sim0.004noiseSame')
-Sim7Same = np.load('Sim0.005noiseSame')
+Sim1Same = np.load('Sim0.0001noiseSame.npy')
+Sim2Same = np.load('Sim0.0005noiseSame.npy')
+Sim3Same = np.load('Sim0.001noiseSame.npy')
+Sim4Same = np.load('Sim0.002noiseSame.npy')
+Sim5Same = np.load('Sim0.003noiseSame.npy')
+Sim6Same = np.load('Sim0.004noiseSame.npy')
+Sim7Same = np.load('Sim0.005noiseSame.npy')
 
-'''
+meansASim = [np.mean(Sim1Same[300:,0]),np.mean(Sim2Same[300:,0]),np.mean(Sim3Same[300:,0]),np.mean(Sim4Same[300:,0]),np.mean(Sim5Same[300:,0]),np.mean(Sim6Same[300:,0]),np.mean(Sim7Same[300:,0])]
+meansAAlt = [np.mean(Alt1Same[300:,0]),np.mean(Alt2Same[300:,0]),np.mean(Alt3Same[300:,0]),np.mean(Alt4Same[300:,0]),np.mean(Alt5Same[300:,0]),np.mean(Alt6Same[300:,0]),np.mean(Alt7Same[300:,0])]
+
+meansTauSim = [np.mean(Sim1Same[300:,1]),np.mean(Sim2Same[300:,1]),np.mean(Sim3Same[300:,1]),np.mean(Sim4Same[300:,1]),np.mean(Sim5Same[300:,1]),np.mean(Sim6Same[300:,1]),np.mean(Sim7Same[300:,1])]
+meansTauAlt = [np.mean(Alt1Same[300:,1]),np.mean(Alt2Same[300:,1]),np.mean(Alt3Same[300:,1]),np.mean(Alt4Same[300:,1]),np.mean(Alt5Same[300:,1]),np.mean(Alt6Same[300:,1]),np.mean(Alt7Same[300:,1])]
+
+plt.figure()
+plt.title('Tau inference - 0.005 noise - Alt')
+plt.xlabel('Iteration')
+plt.ylabel('Tau')
+#plt.ylim([0,0.0])
+plt.plot(np.linspace(1,1500,1500),Alt7Same[:,1],'ko')
+plt.axhline(0.02,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+
 
