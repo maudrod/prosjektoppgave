@@ -1,2 +1,8 @@
 SimDiffNoises.py:105: RuntimeWarning: overflow encountered in exp
   return np.exp(old - min(old,new)),np.exp(new - min(old,new))
+/lustre1/work/emilamy/datasci/lib/python3.8/site-packages/scipy/stats/_continuous_distns.py:2821: RuntimeWarning: overflow encountered in exp
+  return np.exp(self._logpdf(x, a))
+SimDiffNoises.py:99: RuntimeWarning: invalid value encountered in double_scalars
+  proposal_ratio *= gamma.pdf(theta_prior[i],a=shapes[i],scale=theta_next[i]/shapes[i])/\
+SimDiffNoises.py:99: RuntimeWarning: divide by zero encountered in double_scalars
+  proposal_ratio *= gamma.pdf(theta_prior[i],a=shapes[i],scale=theta_next[i]/shapes[i])/\
