@@ -202,11 +202,11 @@ b1ests = []
 b2ests = []
 stds = [0.0001,0.0005,0.001,0.003,0.005]
 Aps = []
-for i in range(4):
+for i in range(2):
     w0est1 = -np.inf
     Aps_temp = []
     while (w0est1 < 0.97 or w0est1 > 1.03):
-        s11,s21,t,W = generative(Ap, Am, tau, tau, b1, b2, w0, stds[0], seconds, binsize)
+        s11,s21,t,W = generative(Ap, Am, tau, tau, b1, b2, w0, std, seconds, binsize)
         b1est1 = infer_b1(s11)
         b2est1 = infer_b2_w0(s11, s21, 1e-10)[0]
         w0est1 = infer_b2_w0(s11[:2000], s21[:2000], 1e-10)[1]
@@ -225,7 +225,7 @@ for i in range(4):
 #np.save('S2Datasets1to4Opposite',s2s)
 #np.save('b1sDatasets1to4Opposite',b1ests)
 #np.save('b2sDatasets1to4Opposite',b2ests)
-np.save('ApInferenceData1to4Opposite',Aps)
+np.save('ApInferenceData1to2Opposite',Aps)
 #np.save('w0ests1to4Opposite',w0ests)
 np.save('NoisesOpposite',stds)
 

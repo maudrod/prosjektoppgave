@@ -246,7 +246,7 @@ w0est = np.load('w0estReal.npy')
 b1 = np.load('b1estReal.npy')
 b2 = np.load('b2estReal.npy')
 
-'''
+
 medApSim = np.median(SimReal[300:,0])
 medTauSim = np.median(SimReal[300:,1])
 medApAlt = np.median(AltReal[300:,0])
@@ -261,30 +261,35 @@ meanApSim = np.mean(SimReal[300:,0])
 meanTauSim = np.mean(SimReal[300:,1])
 meanApAlt = np.mean(AltReal[300:,0])
 meanTauAlt = np.mean(AltReal[300:,1])
-
+'''
 Traj = np.zeros(timesteps)
 Traj[0] = w0est
 t = np.zeros(timesteps)
 for i in range(1,timesteps):
     Traj[i] = Traj[i-1] + learning_rule(spk_pre,spk_post,mapApSim,mapApSim*1.05,mapTauSim,mapTauSim,t,i,binsize) + np.random.normal(0,std)
     t[i] = binsize*i
+'''
 
+ci = [np.sort(AltReal[300:,1])[30],np.sort(AltReal[300:,1])[-31]]
 
 sns.set_style("darkgrid")
 
 plt.figure()
-sns.displot(SimReal[300:,0],kind="kde",color=[0.2,0.4,0.5])
+sns.displot(AltReal[300:,1],kde = True,color=[0.2,0.4,0.5],bins=100)
 #plt.plot(np.linspace(1,1500,1500),AltReal[:,0],'ko')
 #plt.xlim([0.00,0.001])
-plt.axvline(mapApAlt,color='r',linestyle='--',label='MAP: '+str(mapApAlt[0].round(3)))
-plt.axvline(medApAlt,color='g',linestyle='--',label='Median: '+str(medApAlt.round(3)))
-plt.axvline(meanApAlt,color='m',linestyle='--',label='Mean: '+str(meanApAlt.round(3)))
+plt.xlabel(r'$\tau$')
+plt.axvline(mapTauAlt,color='r',linestyle='--',label='MAP: '+str(mapTauAlt[0].round(3)))
+plt.axvline(medTauAlt,color='g',linestyle='--',label='Median: '+str(medTauAlt.round(3)))
+plt.axvline(meanTauAlt,color='m',linestyle='--',label='Mean: '+str(meanTauAlt.round(3)))
+plt.axvline(ci[0],color='b',linestyle='--',label='95% CI')
+plt.axvline(ci[1],color='b',linestyle='--')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
-plt.title(r'Posterior distribution $A_+$ - Alternating Proposals')
+plt.title(r'Posterior distribution $\tau$,    Alternating Proposals')
 #plt.axvline(np.mean(Simest1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
-
+'''
 plt.figure()
 sns.displot(SimReal[300:,0],kde = True,bins=100,color=[0.2,0.4,0.5])
 #plt.hist(SimReal[300:,0],normed=True,bins = 100)
@@ -299,7 +304,8 @@ plt.title(r'Posterior distribution $A_+$ - Simultaneous Proposals')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
-
+'''
+'''
 
 AmMapAlt = mapApAlt[0] * 1.05
 

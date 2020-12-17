@@ -168,7 +168,7 @@ plt.legend()
 plt.show()
 '''
 ##### 2MS TAU INFERENCE ######
-
+'''
 Tau1 = np.load('Tau0.0001noise2msB275same.npy')
 Tau2 = np.load('Tau0.001noise2msB275same.npy')
 Tau3 = np.load('Tau0.003noise2msB275same.npy')
@@ -221,7 +221,7 @@ for i in range(4):
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
-
+'''
 '''
 plt.figure()
 plt.title('Loglikelihoods good $w^0$ estimation - 1ms binsize ')
@@ -245,7 +245,7 @@ plt.show()
 
 #df = pd.DataFrame(data, columns =['log', 'tau'])
 
-
+'''
 Tau1ms1 = np.load('Tau0.0001noise1msB35.npy')
 Tau1ms2 = np.load('Tau0.001noise2msB35.npy')
 Tau1ms3 = np.load('Tau0.003noise2msB35.npy')
@@ -255,14 +255,18 @@ Tau1 = np.load('Tau0.0001noise2msB275.npy')
 Tau2 = np.load('Tau0.001noise2msB275.npy')
 Tau3 = np.load('Tau0.003noise2msB275.npy')
 Tau4 = np.load('Tau0.005noise2msB275.npy')
-'''
-'''
+
+ci = [np.sort(Tau1ms1[300:])[30],np.sort(Tau1ms1[300:])[-31]]
+ci2 = [np.sort(Tau2[300:])[30],np.sort(Tau2[300:])[-31]]
+
 plt.figure()
-sns.displot(Tau1[300:], kde=True,bins=100)
+sns.displot(Tau1ms1[300:], kde=True,bins=100)
 #plt.xlim([0.004,0.007])
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
-plt.xlabel('Tau')
-plt.title('Posterior distribution Tau - $\sigma = 0.0001$ - Binsize 2ms')
+plt.xlabel(r'$\tau$')
+plt.title(r'Posterior distribution $\tau$,   $\sigma$ = 0.0001,  Binsize = 1ms')
+plt.axvline(ci[0],color='g',linestyle='--',label='95% CI')
+plt.axvline(ci[1],color='g',linestyle='--')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
 #plt.title('Posterior distribution Tau - 0.0001 noise')
 #plt.axvline(np.mean(Theta1[300:,0]),label = 'mean')
@@ -273,16 +277,18 @@ plt.show()
 plt.figure()
 sns.displot(Tau2[300:], kde=True,bins=100)
 #plt.xlim([0.004,0.007])
-plt.xlabel('Tau')
+plt.xlabel(r'$\tau$')
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
-plt.title('Posterior distribution Tau - $\sigma = 0.001$ - Binsize 2ms')
+plt.title(r'Posterior distribution $\tau$,   $\sigma$ = 0.001,  Binsize = 2ms')
+plt.axvline(ci2[0],color='g',linestyle='--',label='95% CI')
+plt.axvline(ci2[1],color='g',linestyle='--')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
 #plt.title('Posterior distribution Tau - 0.001 noise')
 #plt.axvline(np.mean(Theta1[300:,0]),label = 'mean')
 #plt.axvline(Map_x,color='g',linestyle='--',label='MAP')
 plt.legend()
 plt.show()
-
+'''
 plt.figure()
 sns.displot(Tau3[300:], kde=True,bins=100)
 #plt.xlim([0.004,0.007])

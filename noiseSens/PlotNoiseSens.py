@@ -58,17 +58,29 @@ plt.legend()
 plt.show()
 
 
+ci = [np.sort(Ap1[300:])[30],np.sort(Ap1[300:])[-31]]
 
 plt.figure()
 plt.xlim([0.002,0.008])
-sns.displot(Ap2[300:], kde=True)
-plt.axvline(0.001,color='r',linestyle='--',label='True Value')
+sns.displot(Ap1[300:], kde=True,bins=100)
+plt.xlabel('$A_+$')
+plt.axvline(0.005,color='r',linestyle='--',label='True Value')
+plt.axvline(ci[0],color='g',linestyle='--',label='95% CI')
+plt.axvline(ci[1],color='g',linestyle='--')
 plt.legend()
-plt.title('Posterior distribution Ap - 0.005 noise')
+plt.title(r'Posterior distribution $A_+$,   $\sigma$ = 0.0001')
+plt.show()
+
+plt.figure()
+plt.title('$A_+$ inference,   $\sigma$ = 0.0001')
+plt.ylabel('$A_+$')
+plt.ylim([0,0.007])
+plt.xlabel('Iteration')
+plt.plot(np.linspace(1,1500,1500),Ap1,'ko')
+plt.axhline(0.005,color='r',linestyle='--',label='True Value')
+plt.legend()
 plt.show()
 '''
-
-
 #Tau analysis
 '''
 x = [1,2,3,4,5,6,7]
@@ -114,11 +126,16 @@ plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 
+ci = [np.sort(Tau7[300:])[30],np.sort(Tau7[300:])[-31]]
+
 plt.figure()
-sns.displot(Tau1[300:], kde=True,bins=100)
+sns.displot(Tau7[300:], kde=True,bins=100)
 plt.axvline(0.02,color='r',linestyle='--',label='True Value')
+plt.axvline(ci[0],color='g',linestyle='--',label='95% CI')
+plt.axvline(ci[1],color='g',linestyle='--')
+plt.xlabel(r'$\tau$')
 plt.legend()
-plt.title('Posterior distribution Tau - 0.0001 noise')
+plt.title(r'Posterior distribution $\tau$,   $\sigma$ = 0.005')
 plt.show()
 
 plt.figure()
@@ -134,7 +151,12 @@ plt.show()
 '''
 Simultaneous
 '''
-'''
+
+Alt1True = np.load('Tau0.02Ap0.005Alt0.0001noise.npy')
+#Alt2True = np.load('Tau0.02Ap0.005Alt0.0005noise.npy')
+#Alt3True  = np.load('Tau0.02Ap0.005Alt0.001noise.npy')
+Alt4True = np.load('Tau0.02Ap0.005Alt0.002noise.npy')
+
 Sim1 = np.load('Sim0.0001noise.npy')
 Sim2 = np.load('Sim0.0005noise.npy')
 Sim3 = np.load('Sim0.001noise.npy')
@@ -180,12 +202,19 @@ TaustdsSim = [np.sqrt(SimTauvar1),np.sqrt(SimTauvar2),np.sqrt(SimTauvar3),np.sqr
 ApmeansSim = [SimApmean1,SimApmean2,SimApmean3,SimApmean4,SimApmean5,SimApmean6,SimApmean7]
 ApstdsSim = [np.sqrt(SimApvar1),np.sqrt(SimApvar2),np.sqrt(SimApvar3),np.sqrt(SimApvar4),np.sqrt(SimApvar5),np.sqrt(SimApvar6),np.sqrt(SimApvar7)]
 
+
+ci = [np.sort(Alt1True[300:,0])[30],np.sort(Alt1True[300:,0])[-31]]
+ci2 = [np.sort(Alt4True[300:,0])[30],np.sort(Alt4True[300:,0])[-31]]
+
+
 plt.figure()
 sns.displot(Alt1True[300:,0], kde=True,bins=100)
-plt.xlim([0.004,0.0075])
-plt.xlabel('$A_+$')
+#plt.xlim([0.004,0.0075])
+plt.xlabel(r'$A_+$')
 plt.axvline(0.005,color='r',linestyle='--',label='True Value')
-plt.title('Posterior distribution $A_+$ - $\sigma = 0.0002$')
+plt.title(r'Posterior distribution $A_+$,   $\sigma$ = 0.0001')
+plt.axvline(ci[0],color='g',linestyle='--',label='95% CI')
+plt.axvline(ci[1],color='g',linestyle='--')
 #plt.plot(X,DensAp1.pdf(X),label='Scipy')
 #plt.title('Posterior distribution Tau - 0.001 noise')
 #plt.axvline(np.mean(Theta1[300:,0]),label = 'mean')
@@ -193,7 +222,7 @@ plt.title('Posterior distribution $A_+$ - $\sigma = 0.0002$')
 plt.legend()
 plt.show()
 
-
+'''
 plt.figure()
 plt.title('Sensitivity of noise - Tau')
 plt.xlabel('Noise')
@@ -221,7 +250,6 @@ plt.axhline(0.005,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 '''
-
 '''
 Alternating analaysis
 '''
@@ -360,22 +388,28 @@ plt.show()
 '''
 
 #AltVsim SAMME DATASETT
+'''
+Alt1Same = np.load('Alt0.0001noiseSame2.npy')
+Alt2Same = np.load('Alt0.0005noiseSame2.npy')
+Alt3Same = np.load('Alt0.001noiseSame2.npy')
+Alt4Same = np.load('Alt0.002noiseSame2.npy')
+Alt5Same = np.load('Alt0.003noiseSame2.npy')
+Alt6Same = np.load('Alt0.004noiseSame2.npy')
+Alt7Same = np.load('Alt0.005noiseSame2.npy')
 
-Alt1Same = np.load('Alt0.0001noiseSame.npy')
-Alt2Same = np.load('Alt0.0005noiseSame.npy')
-Alt3Same = np.load('Alt0.001noiseSame.npy')
-Alt4Same = np.load('Alt0.002noiseSame.npy')
-Alt5Same = np.load('Alt0.003noiseSame.npy')
-Alt6Same = np.load('Alt0.004noiseSame.npy')
-Alt7Same = np.load('Alt0.005noiseSame.npy')
+Sim1Same = np.load('Sim0.0001noiseSame2.npy')
+Sim2Same = np.load('Sim0.0005noiseSame2.npy')
+Sim3Same = np.load('Sim0.001noiseSame2.npy')
+Sim4Same = np.load('Sim0.002noiseSame2.npy')
+Sim5Same = np.load('Sim0.003noiseSame2.npy')
+Sim6Same = np.load('Sim0.004noiseSame2.npy')
+Sim7Same = np.load('Sim0.005noiseSame2.npy')
 
-Sim1Same = np.load('Sim0.0001noiseSame.npy')
-Sim2Same = np.load('Sim0.0005noiseSame.npy')
-Sim3Same = np.load('Sim0.001noiseSame.npy')
-Sim4Same = np.load('Sim0.002noiseSame.npy')
-Sim5Same = np.load('Sim0.003noiseSame.npy')
-Sim6Same = np.load('Sim0.004noiseSame.npy')
-Sim7Same = np.load('Sim0.005noiseSame.npy')
+mapsAAlt = np.load('MapsAAltSame2.npy')
+mapsASim = np.load('MapsASimSame2.npy')
+
+mapsTauAlt = np.load('MapsTauAltSame2.npy')
+mapsTauSim = np.load('MapsTauSimSame2.npy')
 
 meansASim = [np.mean(Sim1Same[300:,0]),np.mean(Sim2Same[300:,0]),np.mean(Sim3Same[300:,0]),np.mean(Sim4Same[300:,0]),np.mean(Sim5Same[300:,0]),np.mean(Sim6Same[300:,0]),np.mean(Sim7Same[300:,0])]
 meansAAlt = [np.mean(Alt1Same[300:,0]),np.mean(Alt2Same[300:,0]),np.mean(Alt3Same[300:,0]),np.mean(Alt4Same[300:,0]),np.mean(Alt5Same[300:,0]),np.mean(Alt6Same[300:,0]),np.mean(Alt7Same[300:,0])]
@@ -383,14 +417,41 @@ meansAAlt = [np.mean(Alt1Same[300:,0]),np.mean(Alt2Same[300:,0]),np.mean(Alt3Sam
 meansTauSim = [np.mean(Sim1Same[300:,1]),np.mean(Sim2Same[300:,1]),np.mean(Sim3Same[300:,1]),np.mean(Sim4Same[300:,1]),np.mean(Sim5Same[300:,1]),np.mean(Sim6Same[300:,1]),np.mean(Sim7Same[300:,1])]
 meansTauAlt = [np.mean(Alt1Same[300:,1]),np.mean(Alt2Same[300:,1]),np.mean(Alt3Same[300:,1]),np.mean(Alt4Same[300:,1]),np.mean(Alt5Same[300:,1]),np.mean(Alt6Same[300:,1]),np.mean(Alt7Same[300:,1])]
 
+stdsASim = [np.sqrt(np.var(Sim1Same[300:,0])),np.sqrt(np.var(Sim2Same[300:,0])),np.sqrt(np.var(Sim3Same[300:,0])),np.sqrt(np.var(Sim4Same[300:,0])),np.sqrt(np.var(Sim5Same[300:,0])),np.sqrt(np.var(Sim6Same[300:,0])),np.sqrt(np.var(Sim7Same[300:,0]))]
+stdsAAlt = [np.sqrt(np.var(Alt1Same[300:,0])),np.sqrt(np.var(Alt2Same[300:,0])),np.sqrt(np.var(Alt3Same[300:,0])),np.sqrt(np.var(Alt4Same[300:,0])),np.sqrt(np.var(Alt5Same[300:,0])),np.sqrt(np.var(Alt6Same[300:,0])),np.sqrt(np.var(Alt7Same[300:,0]))]
+
+stdsTauSim = [np.sqrt(np.var(Sim1Same[300:,1])),np.sqrt(np.var(Sim2Same[300:,1])),np.sqrt(np.var(Sim3Same[300:,1])),np.sqrt(np.var(Sim4Same[300:,1])),np.sqrt(np.var(Sim5Same[300:,1])),np.sqrt(np.var(Sim6Same[300:,1])),np.sqrt(np.var(Sim7Same[300:,1]))]
+stdsTauAlt = [np.sqrt(np.var(Alt1Same[300:,1])),np.sqrt(np.var(Alt2Same[300:,1])),np.sqrt(np.var(Alt3Same[300:,1])),np.sqrt(np.var(Alt4Same[300:,1])),np.sqrt(np.var(Alt5Same[300:,1])),np.sqrt(np.var(Alt6Same[300:,1])),np.sqrt(np.var(Alt7Same[300:,1]))]
+
+
+x = [1,2,3,4,5,6,7]
+ticksss = ['0.0001','0.0005','0.001','0.002','0.003','0.004','0.005']
+
 plt.figure()
-plt.title('Tau inference - 0.005 noise - Alt')
-plt.xlabel('Iteration')
-plt.ylabel('Tau')
-#plt.ylim([0,0.0])
-plt.plot(np.linspace(1,1500,1500),Alt7Same[:,1],'ko')
+plt.title('Sensitivity of noise - A')
+plt.xlabel('Noise')
+plt.ylabel('A estimation')
+#plt.ylim([-0.06,0.1])
+plt.xlim([0,8])
+plt.xticks(x,labels = ticksss)
+for i in range(7):
+    plt.errorbar(x[i], mapsTauSim[i], yerr = stdsTauSim[i],marker = 'o')
 plt.axhline(0.02,color='r',linestyle='--',label='True Value')
 plt.legend()
 plt.show()
 
 
+
+
+plt.figure()
+plt.title(r'$A_+$ plotted versus $\tau$,      $\sigma$ = 0.0005')
+plt.xlabel(r'$\tau$')
+plt.ylabel(r'$A_+$')
+#plt.ylim([0,0.0])
+plt.plot(Alt2Same[300:,1],Alt2Same[300:,0],'ko')
+plt.plot([0.02],[0.005],'ro',label='True value')
+#plt.axhline(0.005,color='r',linestyle='--',label='True Value')
+plt.legend()
+plt.show()
+
+'''
