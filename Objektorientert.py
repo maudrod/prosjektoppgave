@@ -90,7 +90,7 @@ class SimulatedData():
         plt.ylabel('Weight')
         plt.show()
         
-class ParameterInference:
+class ParameterInference():
     '''
     Class for estimating b1,b2,w0,Ap,Am,tau from SimulatedData, given data s1,s2.
     '''
